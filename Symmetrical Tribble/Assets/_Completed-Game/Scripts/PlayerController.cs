@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour {
 	public float speed;
 	public Text countText;
 	public Text winText;
+    public GameObject bomb;
 
 	// Create private references to the rigidbody component on the player, and the count of pick up objects picked up so far
 	private Rigidbody rb;
@@ -76,6 +77,14 @@ public class PlayerController : MonoBehaviour {
 		{
 			// Set the text value of our 'winText'
 			winText.text = "You Win!";
-		}
+            if(bomb == null)
+            {
+                bomb = GameObject.FindWithTag("Bomb");
+                //bomb.SetActive(true);
+                //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                //GameObject cube = GameObject.(PrimitiveType.Cube);
+                GameObject go = (GameObject)Instantiate(Resources.Load("NuclearBomb"));
+            }
+        }
 	}
 }
