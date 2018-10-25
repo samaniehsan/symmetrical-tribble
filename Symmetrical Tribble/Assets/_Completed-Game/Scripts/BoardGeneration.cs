@@ -6,7 +6,7 @@ public class BoardGeneration : MonoBehaviour
     {
         EmptySpace,
         Wall,
-        YellowPickupCube,
+        YellowPickupCapsule,
         BombTrigger
     }
 
@@ -27,16 +27,15 @@ public class BoardGeneration : MonoBehaviour
     const int ARRAYSIZE = 10;
     public BoardItemData[,] BoardItems = new BoardItemData[ARRAYSIZE, ARRAYSIZE];
 
-    public GameObject YellowPickUpCube;
     public GameObject Bomb;
-    
+    public GameObject Target;
 
     // Use this for initialization
     void Start()
     {
         System.Random r = new System.Random(System.DateTime.Now.Millisecond);
+
         // Initialize
-        //BoardItems = new BoardItemData[ARRAYSIZE, ARRAYSIZE];
         for (int i = 0; i < ARRAYSIZE; ++i)
         {
             for (int j = 0; j < ARRAYSIZE; ++j)
@@ -49,6 +48,9 @@ public class BoardGeneration : MonoBehaviour
             }
         }
 
+        // Attach Player's ball to Target
+        Target = GameObject.FindGameObjectWithTag("Player");
+
         // Mark Wall Structures
         for (int i = 0; i < ARRAYSIZE * 2 / 3; ++i)
         {
@@ -59,19 +61,23 @@ public class BoardGeneration : MonoBehaviour
             {
                 // if randomly placed in existing location, try again
                 --i;
+                continue;
             }
             BoardItems[x,z].Item = BoardItem.Wall;
-            //TODO: Connect Walls that are close together
+            //TODO: Connect Walls that are close together?
         }
 
-        // Mark Yellow PickUp Cubes
-        if(YellowPickUpCube != null)
+        // Mark Yellow PickUp Capsules
+        for (int i = 0; i < ARRAYSIZE / 2; ++i)
         {
-            for (int i = 0; i < ARRAYSIZE / 3; ++i)
+            int x = r.Next(ARRAYSIZE);
+            int z = r.Next(ARRAYSIZE);
+            if (BoardItems[x, z].Item != BoardItem.EmptySpace)
             {
-                BoardItems[r.Next(ARRAYSIZE), 
-                           r.Next(ARRAYSIZE)].Item = BoardItem.YellowPickupCube;
+                --i;
+                continue;
             }
+            BoardItems[x, z].Item = BoardItem.YellowPickupCapsule;
         }
 
         // Mark Bomb Trigger
@@ -113,9 +119,21 @@ public class BoardGeneration : MonoBehaviour
                         break;
                     case BoardItem.BombTrigger:
                         break;
-                    case BoardItem.YellowPickupCube:
-                        GameObject yellow = Instantiate(YellowPickUpCube);
-                        yellow.transform.position = new Vector3(j, 0f, i);
+                    case BoardItem.YellowPickupCapsule:
+                        GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                        capsule.transform.position = new Vector3(j, 0.5f, i);
+                        capsule.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
+                        capsule.GetComponentInChildren<Renderer>().material.color = Color.blue;
+                        capsule.AddComponent<BoxCollider>();
+                        capsule.GetComponentInChildren<BoxCollider>().isTrigger = true;
+                        capsule.tag = "Pick Up";
+                        if(Target != null)
+                        {
+                            capsule.AddComponent<SeekBehavior>();
+                            capsule.GetComponent<SeekBehavior>().target = Target;
+                            capsule.GetComponent<SeekBehavior>().speed = 1.0f;
+                            capsule.SetActive(true);
+                        }
                         break;
                     default:
                         break;

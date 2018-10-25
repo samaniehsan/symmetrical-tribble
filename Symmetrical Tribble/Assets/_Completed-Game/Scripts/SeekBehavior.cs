@@ -26,9 +26,11 @@ public class SeekBehavior : MonoBehaviour
         Vector3 direction = Vector3.Normalize(target.transform.position - transform.position);
         transform.position += direction * speed * Time.deltaTime;
         // if bomb has reached the ground, remove it from view
-        if(transform.position.y <= 1.0)
+        if(transform.position.y < 0.5f)
         {
             gameObject.SetActive(false);
         }
+        //TODO: Add obstacle avoidance
+        // Pages 99-103 in the book describe this
     }
 }
