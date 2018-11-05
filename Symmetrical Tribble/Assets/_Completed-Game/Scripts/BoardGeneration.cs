@@ -6,7 +6,7 @@ public class BoardGeneration : MonoBehaviour
     {
         EmptySpace,
         Wall,
-        YellowPickupCapsule,
+        BlueEnemyCapsule,
         BombTrigger
     }
 
@@ -25,7 +25,7 @@ public class BoardGeneration : MonoBehaviour
     };
 
     const int ARRAYSIZE = 10;
-    public BoardItemData[,] BoardItems = new BoardItemData[ARRAYSIZE, ARRAYSIZE];
+    private BoardItemData[,] BoardItems = new BoardItemData[ARRAYSIZE, ARRAYSIZE];
 
     public GameObject Bomb;
     public GameObject Target;
@@ -77,7 +77,7 @@ public class BoardGeneration : MonoBehaviour
                 --i;
                 continue;
             }
-            BoardItems[x, z].Item = BoardItem.YellowPickupCapsule;
+            BoardItems[x, z].Item = BoardItem.BlueEnemyCapsule;
         }
 
         // Mark Bomb Trigger
@@ -119,14 +119,14 @@ public class BoardGeneration : MonoBehaviour
                         break;
                     case BoardItem.BombTrigger:
                         break;
-                    case BoardItem.YellowPickupCapsule:
+                    case BoardItem.BlueEnemyCapsule:
                         GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
                         capsule.transform.position = new Vector3(j, 0.5f, i);
                         capsule.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
                         capsule.GetComponentInChildren<Renderer>().material.color = Color.blue;
                         capsule.AddComponent<BoxCollider>();
                         capsule.GetComponentInChildren<BoxCollider>().isTrigger = true;
-                        capsule.tag = "Pick Up";
+                        capsule.tag = "Enemy Capsule";
                         if(Target != null)
                         {
                             capsule.AddComponent<SeekBehavior>();
