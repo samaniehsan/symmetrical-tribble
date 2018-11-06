@@ -6,7 +6,8 @@ public class BoardGeneration : MonoBehaviour
     {
         EmptySpace,
         Wall,
-        YellowPickupCapsule,
+        BluePickUpCapsule,
+        YellowPickUp,
         BombTrigger
     }
 
@@ -28,6 +29,7 @@ public class BoardGeneration : MonoBehaviour
     public BoardItemData[,] BoardItems = new BoardItemData[ARRAYSIZE, ARRAYSIZE];
 
     public GameObject Bomb;
+    public GameObject YellowPickUp;
     public GameObject Target;
 
     // Use this for initialization
@@ -67,7 +69,7 @@ public class BoardGeneration : MonoBehaviour
             //TODO: Connect Walls that are close together?
         }
 
-        // Mark Yellow PickUp Capsules
+        // Mark Blue PickUp Capsules
         for (int i = 0; i < ARRAYSIZE / 2; ++i)
         {
             int x = r.Next(ARRAYSIZE);
@@ -77,14 +79,39 @@ public class BoardGeneration : MonoBehaviour
                 --i;
                 continue;
             }
-            BoardItems[x, z].Item = BoardItem.YellowPickupCapsule;
+            BoardItems[x, z].Item = BoardItem.BluePickUpCapsule;
+        }
+
+        // Mark Yellow PickUps
+        if (YellowPickUp != null)
+        {
+            for (int i = 0; i < ARRAYSIZE / 2; ++i)
+            {
+                int x = r.Next(ARRAYSIZE);
+                int z = r.Next(ARRAYSIZE);
+                if (BoardItems[x, z].Item != BoardItem.EmptySpace)
+                {
+                    --i;
+                    continue;
+                }
+                BoardItems[x, z].Item = BoardItem.YellowPickUp;
+            }
         }
 
         // Mark Bomb Trigger
-        if(Bomb != null)
+        if (Bomb != null)
         {
-            BoardItems[r.Next(ARRAYSIZE), 
-                       r.Next(ARRAYSIZE)].Item = BoardItem.BombTrigger;
+            for (int i = 0; i < 1; ++i)
+            {
+                int x = r.Next(ARRAYSIZE);
+                int z = r.Next(ARRAYSIZE);
+                if (BoardItems[x, z].Item != BoardItem.EmptySpace)
+                {
+                    --i;
+                    continue;
+                }
+                BoardItems[x, z].Item = BoardItem.BombTrigger;
+            }
         }
 
         // 10.0f is the size of one Quadrant
@@ -118,8 +145,14 @@ public class BoardGeneration : MonoBehaviour
                         cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
                         break;
                     case BoardItem.BombTrigger:
+                        GameObject b = Instantiate(Bomb, new Vector3(j, 0.5f, i), Quaternion.identity);
                         break;
-                    case BoardItem.YellowPickupCapsule:
+                    case BoardItem.YellowPickUp:
+                        //Instantiate(YellowPickUp, new Vector3(j, 0.5f, i), Quaternion.identity);
+                        GameObject yp = Instantiate(YellowPickUp) as GameObject;
+                        yp.transform.position = new Vector3(j, 0.5f, i);
+                        break;
+                    case BoardItem.BluePickUpCapsule:
                         GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
                         capsule.transform.position = new Vector3(j, 0.5f, i);
                         capsule.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
