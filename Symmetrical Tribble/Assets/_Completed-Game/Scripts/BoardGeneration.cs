@@ -2,7 +2,7 @@
 
 public class BoardGeneration : MonoBehaviour
 {
-    public enum BoardItem 
+    public enum BoardItem
     {
         EmptySpace,
         Wall,
@@ -35,18 +35,7 @@ public class BoardGeneration : MonoBehaviour
     {
         System.Random r = new System.Random(System.DateTime.Now.Millisecond);
 
-        // Initialize
-        for (int i = 0; i < ARRAYSIZE; ++i)
-        {
-            for (int j = 0; j < ARRAYSIZE; ++j)
-            {
-                BoardItems[i, j] = new BoardItemData
-                                       {
-                                           Item = BoardItem.EmptySpace,
-                                           WallConnections = 0
-                                       };
-            }
-        }
+        initializeBoard();
 
         // Attach Player's ball to Target
         Target = GameObject.FindGameObjectWithTag("Player");
@@ -83,63 +72,80 @@ public class BoardGeneration : MonoBehaviour
         // Mark Bomb Trigger
         if(Bomb != null)
         {
-            BoardItems[r.Next(ARRAYSIZE), 
+            BoardItems[r.Next(ARRAYSIZE),
                        r.Next(ARRAYSIZE)].Item = BoardItem.BombTrigger;
         }
 
-        // 10.0f is the size of one Quadrant
-        float scaleX = 10.0f / ARRAYSIZE;// * 0.9f;
-        float scaleZ = 10.0f / ARRAYSIZE;// * 0.9f;
-        float scaleY = 1.5f;
+        placeItemsOnBoard();
+    }
 
-        // Place Items on Map (mirror one quadrant's items about axes to cover board)
-        for (int i = 0; i < ARRAYSIZE; ++i)
-        {
-            for (int j = 0; j < ARRAYSIZE; ++j)
-            {
-                switch(BoardItems[i,j].Item)
-                {
-                    case BoardItem.Wall:
-                        // North-East Quadrant
-                        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        cube.transform.position = new Vector3(j, 0f, i);
-                        cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                        // North-West
-                        cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        cube.transform.position = new Vector3(-j, 0f, i);
-                        cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                        // South-West
-                        cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        cube.transform.position = new Vector3(-j, 0f, -i);
-                        cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                        // South-East
-                        cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        cube.transform.position = new Vector3(j, 0f, -i);
-                        cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                        break;
-                    case BoardItem.BombTrigger:
-                        break;
-                    case BoardItem.YellowPickupCapsule:
-                        GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                        capsule.transform.position = new Vector3(j, 0.5f, i);
-                        capsule.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
-                        capsule.GetComponentInChildren<Renderer>().material.color = Color.blue;
-                        capsule.AddComponent<BoxCollider>();
-                        capsule.GetComponentInChildren<BoxCollider>().isTrigger = true;
-                        capsule.tag = "Pick Up";
-                        if(Target != null)
-                        {
-                            capsule.AddComponent<SeekBehavior>();
-                            capsule.GetComponent<SeekBehavior>().target = Target;
-                            capsule.GetComponent<SeekBehavior>().speed = 1.0f;
-                            capsule.SetActive(true);
-                        }
-                        break;
-                    default:
-                        break;
-                }
+    // Initialize board
+    void initializeBoard() {
+        // Initialize
+        for (int i = 0; i < ARRAYSIZE; ++i) {
+            for (int j = 0; j < ARRAYSIZE; ++j) {
+                BoardItems[i, j] = new BoardItemData {
+                                         Item = BoardItem.EmptySpace,
+                                         WallConnections = 0
+                                   };
             }
         }
+    }
+
+    void placeItemsOnBoard() {
+      // 10.0f is the size of one Quadrant
+      float scaleX = 10.0f / ARRAYSIZE;// * 0.9f;
+      float scaleZ = 10.0f / ARRAYSIZE;// * 0.9f;
+      float scaleY = 1.5f;
+      
+      // Place Items on Map (mirror one quadrant's items about axes to cover board)
+      for (int i = 0; i < ARRAYSIZE; ++i)
+      {
+          for (int j = 0; j < ARRAYSIZE; ++j)
+          {
+              switch(BoardItems[i,j].Item)
+              {
+                  case BoardItem.Wall:
+                      // North-East Quadrant
+                      GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                      cube.transform.position = new Vector3(j, 0f, i);
+                      cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                      // North-West
+                      cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                      cube.transform.position = new Vector3(-j, 0f, i);
+                      cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                      // South-West
+                      cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                      cube.transform.position = new Vector3(-j, 0f, -i);
+                      cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                      // South-East
+                      cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                      cube.transform.position = new Vector3(j, 0f, -i);
+                      cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                      break;
+                  case BoardItem.BombTrigger:
+                      break;
+                  case BoardItem.YellowPickupCapsule:
+                      GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                      capsule.transform.position = new Vector3(j, 0.5f, i);
+                      capsule.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
+                      capsule.GetComponentInChildren<Renderer>().material.color = Color.blue;
+                      capsule.AddComponent<BoxCollider>();
+                      capsule.GetComponentInChildren<BoxCollider>().isTrigger = true;
+                      capsule.tag = "Pick Up";
+                      if(Target != null)
+                      {
+                          capsule.AddComponent<SeekBehavior>();
+                          capsule.GetComponent<SeekBehavior>().target = Target;
+                          capsule.GetComponent<SeekBehavior>().speed = 1.0f;
+                          capsule.SetActive(true);
+                      }
+                      break;
+                  default:
+                      break;
+              }
+          }
+      }
     }
 
     // Update is called once per frame
