@@ -11,14 +11,16 @@ public class PlayerController : MonoBehaviour {
 	public float speed;
 	public Text countText;
 	public Text winText;
+    public Text healthStatusText;
     public GameObject bomb;
 
 	// Create private references to the rigidbody component on the player, and the count of pick up objects picked up so far
 	private Rigidbody rb;
 	private int count;
+    private int healthLevel = 100;
 
-	// At the start of the game..
-	void Start ()
+    // At the start of the game..
+    void Start ()
 	{
 		// Assign the Rigidbody component to our private rb variable
 		rb = GetComponent<Rigidbody>();
@@ -55,16 +57,133 @@ public class PlayerController : MonoBehaviour {
 		// ..and if the game object we intersect has the tag 'Pick Up' assigned to it..
 		if (other.gameObject.CompareTag ("Pick Up"))
 		{
-			// Make the other game object (the pick up) inactive, to make it disappear
-			other.gameObject.SetActive (false);
-
-			// Add one to the score variable 'count'
-			count = count + 1;
-
-			// Run the 'SetCountText()' function (see below)
-			SetCountText ();
-		}
+            HandleGoldenBallPickup(other);
+        }
+        else
+        {
+            HandleEnemyCollision(other);
+        }
 	}
+    
+    void HandleGoldenBallPickup(Collider other)
+    {
+        // Make the other game object (the pick up) inactive, to make it disappear
+        other.gameObject.SetActive(false);
+
+        // Add one to the score variable 'count'
+        count = count + 1;
+
+        // Run the 'SetCountText()' function (see below)
+        SetCountText();
+    }
+
+    void HandleEnemyCollision(Collider enemy)
+    {
+        if (enemy.gameObject.CompareTag("Enemy Capsule"))
+        {
+            this.healthLevel -= 10;
+        }
+        else
+        {
+            if (enemy.gameObject.CompareTag("Bomb"))
+                this.healthLevel = 0;
+        }
+        SetHealthIndicator();
+        
+    }
+    void SetHealthIndicator()
+    {
+        var healthLevel = GetHealthLevel();
+        healthStatusText.text = GetHealthStatusText(healthLevel);
+        healthStatusText.color = GetHealthColor(healthLevel);
+    }
+    enum HealthLevel
+    {
+        Dead,
+        Zombie,
+        Fumes,
+        Weak,
+        Injured,
+        Ok,
+        Strong,
+        SuperStrong
+    }
+    
+    HealthLevel GetHealthLevel()
+    {
+        if (this.healthLevel >= 100)
+        {
+            return HealthLevel.SuperStrong;
+        }
+        else if (this.healthLevel >= 80)
+        {
+            return HealthLevel.Strong;
+        }
+        else if (this.healthLevel >= 60)
+        {
+            return HealthLevel.Ok;
+        }
+        else if (this.healthLevel >= 40)
+        {
+            return HealthLevel.Injured;
+        }
+        else if (this.healthLevel >= 30)
+        {
+            return HealthLevel.Weak;
+        }
+        else if (this.healthLevel >= 20)
+        {
+            return HealthLevel.Fumes;
+        }
+        else if (this.healthLevel >= 10)
+        {
+            return HealthLevel.Zombie;
+        }
+        return HealthLevel.Dead;
+    }
+
+    Color GetHealthColor(HealthLevel level)
+    {
+        switch (level)
+        {
+            case HealthLevel.SuperStrong:
+                return Color.green;
+            case HealthLevel.Strong:
+                return Color.blue;
+            case HealthLevel.Ok:
+                return Color.cyan;
+            case HealthLevel.Injured:
+                return Color.yellow;
+            case HealthLevel.Weak:
+                return Color.cyan;
+            case HealthLevel.Fumes:
+                return Color.red;
+            case HealthLevel.Zombie:
+                return Color.red;
+        }
+        return Color.red;
+    }
+    string GetHealthStatusText(HealthLevel level)
+    {
+        switch(level)
+        {
+            case HealthLevel.SuperStrong:
+                return "SuperStrong";
+            case HealthLevel.Strong:
+                return "Strong";
+            case HealthLevel.Ok:
+                return "Ok";
+            case HealthLevel.Injured:
+                return "Injured";
+            case HealthLevel.Weak:
+                return "Weak";
+            case HealthLevel.Fumes:
+                return "Fumes";
+            case HealthLevel.Zombie:
+                return "Zombie";
+        }
+        return "Dead";
+    }
 
 	// Create a standalone function that can update the 'countText' UI and check if the required amount to win has been achieved
 	void SetCountText()
