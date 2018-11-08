@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Please use the BoardSeekRaycastBehavior, as it will not collide with walls
 public class BoardSeekBehavior : MonoBehaviour
 {
     public GameObject target;

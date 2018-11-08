@@ -28,8 +28,8 @@ public class BoardGeneration : MonoBehaviour
     };
 
     const int ARRAYSIZE = 10;
-    const int BLUECAPSULES = 0;//5;
-    const int ORANGECAPSULES = 0;//5;
+    const int BLUECAPSULES = 2;//5;
+    const int ORANGECAPSULES = 2;//5;
     const int GREENCAPSULES = 5;
 
     public BoardItemData[,] BoardItems = new BoardItemData[ARRAYSIZE, ARRAYSIZE];
@@ -204,10 +204,10 @@ public class BoardGeneration : MonoBehaviour
                         capsule.tag = "Enemy Capsule";
                         if(_target != null)
                         {
-                            capsule.AddComponent<BoardSeekBehavior>();
-                            capsule.GetComponent<BoardSeekBehavior>().target = _target;
-                            capsule.GetComponent<BoardSeekBehavior>().speed = 1.0f;
-                            capsule.GetComponent<BoardSeekBehavior>().boundaryReached = true;
+                            capsule.AddComponent<BoardSeekRaycastBehavior>();
+                            capsule.GetComponent<BoardSeekRaycastBehavior>().target = _target;
+                            capsule.GetComponent<BoardSeekRaycastBehavior>().speed = 1.5f;
+                            capsule.GetComponent<BoardSeekRaycastBehavior>().boundaryReached = true;
                             capsule.SetActive(true);
                         }
                         break;
@@ -221,11 +221,11 @@ public class BoardGeneration : MonoBehaviour
                         capsuleOrange.tag = "Enemy Capsule";
                         if (_target != null)
                         {
-                            capsuleOrange.AddComponent<BoardSeekBehavior>();
-                            capsuleOrange.GetComponent<BoardSeekBehavior>().target = _target;
-                            capsuleOrange.GetComponent<BoardSeekBehavior>().speed = r.Next(1,3);
-                            capsuleOrange.GetComponent<BoardSeekBehavior>().boundary = 5.0f;
-                            capsuleOrange.GetComponent<BoardSeekBehavior>().boundaryReached = false;
+                            capsuleOrange.AddComponent<BoardSeekRaycastBehavior>();
+                            capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().target = _target;
+                            capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().speed = r.Next(1,3);
+                            capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().boundary = 5.0f;
+                            capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().boundaryReached = false;
                             capsuleOrange.SetActive(true);
                         }
 
@@ -241,9 +241,9 @@ public class BoardGeneration : MonoBehaviour
                         if (_target != null)
                         {
                             capsuleGreen.AddComponent<BoardSeekRaycastBehavior>();
-                            //capsuleGreen.GetComponent<BoardSeekBehavior>().target = _target;
-                            //capsuleGreen.GetComponent<BoardSeekBehavior>().speed = 1.0f;
-                            //capsuleGreen.GetComponent<BoardSeekBehavior>().boundaryReached = true;
+                            capsuleGreen.GetComponent<BoardSeekRaycastBehavior>().target = _target;
+                            capsuleGreen.GetComponent<BoardSeekRaycastBehavior>().speed = 1.0f;
+                            capsuleGreen.GetComponent<BoardSeekRaycastBehavior>().boundaryReached = true;
                             capsuleGreen.SetActive(true);
                         }
                         break;
