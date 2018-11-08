@@ -8,6 +8,7 @@ public class BoardGeneration : MonoBehaviour
         Wall,
         BlueEnemyCapsule,       // always attack target
         OrangeEnemyCapsule,     // attach target once within a certain radius
+        GreenEnemyCapsule,      // attack target - with raycast avoidance
         YellowPickUp,
         BombTrigger             // activates the overhead bomb
     }
@@ -27,6 +28,10 @@ public class BoardGeneration : MonoBehaviour
     };
 
     const int ARRAYSIZE = 10;
+    const int BLUECAPSULES = 0;//5;
+    const int ORANGECAPSULES = 0;//5;
+    const int GREENCAPSULES = 5;
+
     public BoardItemData[,] BoardItems = new BoardItemData[ARRAYSIZE, ARRAYSIZE];
 
     public GameObject Bomb;
@@ -71,7 +76,7 @@ public class BoardGeneration : MonoBehaviour
         }
 
         // Mark Blue Enemy Capsules
-        for (int i = 0; i < ARRAYSIZE / 2; ++i)
+        for (int i = 0; i < BLUECAPSULES; ++i)
         {
             int x = r.Next(ARRAYSIZE);
             int z = r.Next(ARRAYSIZE);
@@ -84,7 +89,7 @@ public class BoardGeneration : MonoBehaviour
         }
 
         // Mark Orange Enemy Capsules
-        for (int i = 0; i < ARRAYSIZE / 2; ++i)
+        for (int i = 0; i < ORANGECAPSULES; ++i)
         {
             int x = r.Next(ARRAYSIZE);
             int z = r.Next(ARRAYSIZE);
@@ -94,6 +99,19 @@ public class BoardGeneration : MonoBehaviour
                 continue;
             }
             BoardItems[x, z].Item = BoardItem.OrangeEnemyCapsule;
+        }
+
+        // Mark Green Enemy Capsules
+        for (int i = 0; i < GREENCAPSULES; ++i)
+        {
+            int x = r.Next(ARRAYSIZE);
+            int z = r.Next(ARRAYSIZE);
+            if (BoardItems[x, z].Item != BoardItem.EmptySpace)
+            {
+                --i;
+                continue;
+            }
+            BoardItems[x, z].Item = BoardItem.GreenEnemyCapsule;
         }
 
         // Mark Yellow PickUps
@@ -113,20 +131,17 @@ public class BoardGeneration : MonoBehaviour
         }
 
         // Mark Bomb Trigger
-        //if (Bomb != null)
-        //{
-            for (int i = 0; i < 1; ++i)
+        for (int i = 0; i < 1; ++i)
+        {
+            int x = r.Next(ARRAYSIZE);
+            int z = r.Next(ARRAYSIZE);
+            if (BoardItems[x, z].Item != BoardItem.EmptySpace)
             {
-                int x = r.Next(ARRAYSIZE);
-                int z = r.Next(ARRAYSIZE);
-                if (BoardItems[x, z].Item != BoardItem.EmptySpace)
-                {
-                    --i;
-                    continue;
-                }
-                BoardItems[x, z].Item = BoardItem.BombTrigger;
+                --i;
+                continue;
             }
-        //}
+            BoardItems[x, z].Item = BoardItem.BombTrigger;
+        }
 
         // 10.0f is the size of one Quadrant
         float scaleX = 10.0f / ARRAYSIZE;// * 0.9f;
@@ -145,18 +160,22 @@ public class BoardGeneration : MonoBehaviour
                         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                         cube.transform.position = new Vector3(j, 0f, i);
                         cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                        cube.tag = "Wall";
                         // North-West
                         cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                         cube.transform.position = new Vector3(-j, 0f, i);
                         cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                        cube.tag = "Wall";
                         // South-West
                         cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                         cube.transform.position = new Vector3(-j, 0f, -i);
                         cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                        cube.tag = "Wall";
                         // South-East
                         cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                         cube.transform.position = new Vector3(j, 0f, -i);
                         cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                        cube.tag = "Wall";
                         break;
                     case BoardItem.BombTrigger:
                         GameObject capsuleTrigger = GameObject.CreatePrimitive(PrimitiveType.Capsule);
@@ -210,6 +229,23 @@ public class BoardGeneration : MonoBehaviour
                             capsuleOrange.SetActive(true);
                         }
 
+                        break;
+                    case BoardItem.GreenEnemyCapsule:
+                        GameObject capsuleGreen = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                        capsuleGreen.transform.position = new Vector3(j, 0.5f, i);
+                        capsuleGreen.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
+                        capsuleGreen.GetComponentInChildren<Renderer>().material.color = Color.green;
+                        capsuleGreen.AddComponent<BoxCollider>();
+                        capsuleGreen.GetComponentInChildren<BoxCollider>().isTrigger = true;
+                        capsuleGreen.tag = "Enemy Capsule";
+                        if (_target != null)
+                        {
+                            capsuleGreen.AddComponent<BoardSeekRaycastBehavior>();
+                            //capsuleGreen.GetComponent<BoardSeekBehavior>().target = _target;
+                            //capsuleGreen.GetComponent<BoardSeekBehavior>().speed = 1.0f;
+                            //capsuleGreen.GetComponent<BoardSeekBehavior>().boundaryReached = true;
+                            capsuleGreen.SetActive(true);
+                        }
                         break;
                     default:
                         break;
