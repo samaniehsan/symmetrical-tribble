@@ -10,15 +10,22 @@ public class PlayerController : MonoBehaviour {
 	// Create public variables for player speed, and for the Text UI game objects
 	public float speed;
 	public Text countText;
+<<<<<<< HEAD
   public GameObject bomb;
 	public int health;
+=======
+	public Text winText;
+    public Text healthStatusText;
+    public GameObject bomb;
+>>>>>>> c1acb48f6fcc4b5ca2e8ac725634f8c0c1d2e27c
 
 	// Create private references to the rigidbody component on the player, and the count of pick up objects picked up so far
 	private Rigidbody rb;
 	private int count;
+    private int healthLevel = 100;
 
-	// At the start of the game..
-	void Start ()
+    // At the start of the game..
+    void Start ()
 	{
 		// Assign the Rigidbody component to our private rb variable
 		rb = GetComponent<Rigidbody>();
@@ -51,28 +58,155 @@ public class PlayerController : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
 	{
 		// ..and if the game object we intersect has the tag 'Pick Up' assigned to it..
-		if (other.tag == "Pick Up") {
-			// Make the other game object (the pick up) inactive, to make it disappear
-			other.gameObject.SetActive (false);
-
-			// Add one to the score variable 'count'
-			count = count + 1;
-
-			// Run the 'SetCountText()' function (see below)
-			SetCountText ();
-		}
+		if (other.gameObject.CompareTag ("Pick Up"))
+		{
+            HandleGoldenBallPickup(other);
+        }
+        else if(other.gameObject.CompareTag("BombTrigger"))
+        {
+            HandleBombTriggerCollision(other);
+        }
+        else
+        {
+            HandleEnemyCollision(other);
+        }
 	}
 
-	public void loseHealth(int loss) {
-			health -= loss;
-			checkIfGameOver();
-	}
+    private void HandleBombTriggerCollision(Collider collider)
+    {
+        GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
+        bomb.AddComponent<SeekBehavior>();
+        bomb.GetComponent<SeekBehavior>().target = GameObject.FindGameObjectWithTag("Player");
+        bomb.GetComponent<SeekBehavior>().speed = 3.0f;
+        bomb.GetComponent<SeekBehavior>().initialHeight = 25.0f;
 
-	private void checkIfGameOver() {
-			if (health <= 0) {
-					GameManager.instance.gameOver();
-			}
-	}
+        collider.gameObject.SetActive(false);
+    }
+
+    void HandleGoldenBallPickup(Collider other)
+    {
+        // Make the other game object (the pick up) inactive, to make it disappear
+        other.gameObject.SetActive(false);
+
+        // Add one to the score variable 'count'
+        count = count + 1;
+
+        // Run the 'SetCountText()' function (see below)
+        SetCountText();
+
+    }
+
+    void HandleEnemyCollision(Collider enemy)
+    {
+        if (enemy.gameObject.CompareTag("Enemy Capsule"))
+        {
+            this.healthLevel -= 10;
+            enemy.gameObject.SetActive(false);
+        }
+        else
+        {
+            if (enemy.gameObject.CompareTag("Bomb"))
+                this.healthLevel = 0;
+        }
+        SetHealthIndicator();
+
+				// Check if the stage is over
+				checkGameOverCondition();
+
+    }
+    void SetHealthIndicator()
+    {
+        var healthLevel = GetHealthLevel();
+        healthStatusText.text = GetHealthStatusText(healthLevel);
+        healthStatusText.color = GetHealthColor(healthLevel);
+    }
+    enum HealthLevel
+    {
+        Dead,
+        Zombie,
+        Fumes,
+        Weak,
+        Injured,
+        Ok,
+        Strong,
+        SuperStrong
+    }
+
+    HealthLevel GetHealthLevel()
+    {
+        if (this.healthLevel >= 100)
+        {
+            return HealthLevel.SuperStrong;
+        }
+        else if (this.healthLevel >= 80)
+        {
+            return HealthLevel.Strong;
+        }
+        else if (this.healthLevel >= 60)
+        {
+            return HealthLevel.Ok;
+        }
+        else if (this.healthLevel >= 40)
+        {
+            return HealthLevel.Injured;
+        }
+        else if (this.healthLevel >= 30)
+        {
+            return HealthLevel.Weak;
+        }
+        else if (this.healthLevel >= 20)
+        {
+            return HealthLevel.Fumes;
+        }
+        else if (this.healthLevel >= 10)
+        {
+            return HealthLevel.Zombie;
+        }
+        return HealthLevel.Dead;
+    }
+
+    Color GetHealthColor(HealthLevel level)
+    {
+        switch (level)
+        {
+            case HealthLevel.SuperStrong:
+                return Color.green;
+            case HealthLevel.Strong:
+                return Color.blue;
+            case HealthLevel.Ok:
+                return Color.cyan;
+            case HealthLevel.Injured:
+                return Color.yellow;
+            case HealthLevel.Weak:
+                return Color.cyan;
+            case HealthLevel.Fumes:
+                return Color.red;
+            case HealthLevel.Zombie:
+                return Color.red;
+        }
+        return Color.red;
+    }
+    string GetHealthStatusText(HealthLevel level)
+    {
+        switch(level)
+        {
+            case HealthLevel.SuperStrong:
+                return "SuperStrong";
+            case HealthLevel.Strong:
+                return "Strong";
+            case HealthLevel.Ok:
+                return "Ok";
+            case HealthLevel.Injured:
+                return "Injured";
+            case HealthLevel.Weak:
+                return "Weak";
+            case HealthLevel.Fumes:
+                return "Fumes";
+            case HealthLevel.Zombie:
+                return "Zombie";
+        }
+        return "Dead";
+    }
 
 	// Create a standalone function that can update the 'countText' UI and check if the required amount to win has been achieved
 	void SetCountText()
@@ -86,14 +220,12 @@ public class PlayerController : MonoBehaviour {
 		{
 			// Set the text value of our 'winText'
 			winText.text = "You Win!";
-            if(bomb == null)
-            {
-                bomb = GameObject.FindWithTag("Bomb");
-                //bomb.SetActive(true);
-                //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                //GameObject cube = GameObject.(PrimitiveType.Cube);
-                GameObject go = (GameObject)Instantiate(Resources.Load("NuclearBomb"));
-            }
-        }*/
+        } */
+	}
+
+	void checkGameOverCondition() {
+			if (healthLevel <= 0) {
+					GameManager.instance.gameOver();
+			}
 	}
 }
