@@ -10,14 +10,8 @@ public class PlayerController : MonoBehaviour {
 	// Create public variables for player speed, and for the Text UI game objects
 	public float speed;
 	public Text countText;
-<<<<<<< HEAD
-  public GameObject bomb;
-	public int health;
-=======
-	public Text winText;
     public Text healthStatusText;
     public GameObject bomb;
->>>>>>> c1acb48f6fcc4b5ca2e8ac725634f8c0c1d2e27c
 
 	// Create private references to the rigidbody component on the player, and the count of pick up objects picked up so far
 	private Rigidbody rb;
