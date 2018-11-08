@@ -59,12 +59,27 @@ public class PlayerController : MonoBehaviour {
 		{
             HandleGoldenBallPickup(other);
         }
+        else if(other.gameObject.CompareTag("BombTrigger"))
+        {
+            HandleBombTriggerCollision(other);
+        }
         else
         {
             HandleEnemyCollision(other);
         }
 	}
-    
+
+    private void HandleBombTriggerCollision(Collider collider)
+    {
+        GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
+        bomb.AddComponent<SeekBehavior>();
+        bomb.GetComponent<SeekBehavior>().target = GameObject.FindGameObjectWithTag("Player");
+        bomb.GetComponent<SeekBehavior>().speed = 3.0f;
+        bomb.GetComponent<SeekBehavior>().initialHeight = 25.0f;
+
+        collider.gameObject.SetActive(false);
+    }
+
     void HandleGoldenBallPickup(Collider other)
     {
         // Make the other game object (the pick up) inactive, to make it disappear
@@ -82,6 +97,7 @@ public class PlayerController : MonoBehaviour {
         if (enemy.gameObject.CompareTag("Enemy Capsule"))
         {
             this.healthLevel -= 10;
+            enemy.gameObject.SetActive(false);
         }
         else
         {
@@ -196,14 +212,6 @@ public class PlayerController : MonoBehaviour {
 		{
 			// Set the text value of our 'winText'
 			winText.text = "You Win!";
-            if(bomb == null)
-            {
-                bomb = GameObject.FindWithTag("Bomb");
-                //bomb.SetActive(true);
-                //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                //GameObject cube = GameObject.(PrimitiveType.Cube);
-                GameObject go = (GameObject)Instantiate(Resources.Load("NuclearBomb"));
-            }
         }
 	}
 }
