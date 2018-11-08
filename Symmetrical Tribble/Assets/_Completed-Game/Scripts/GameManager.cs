@@ -68,6 +68,7 @@ public class GameManager : MonoBehaviour {
     void hideLevelImage() {
         levelImage.SetActive(false);
 
+
         doingSetup = false;
     }
 
@@ -77,6 +78,7 @@ public class GameManager : MonoBehaviour {
 
         enabled = false;
     }
+
     // Update is called once per frame
     void Update() {
 
