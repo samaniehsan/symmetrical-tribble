@@ -218,7 +218,9 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void checkGameOverCondition() {
-			if (healthLevel <= 0) {
+			Debug.Log("Checking game over condition - health level is " + healthLevel);
+			if (this.healthLevel <= 0) {
+					Debug.Log("Calling GameManager.gameOver()");
 					GameManager.instance.gameOver();
 			}
 	}

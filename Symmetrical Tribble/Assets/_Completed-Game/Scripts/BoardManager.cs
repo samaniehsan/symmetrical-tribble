@@ -1,17 +1,17 @@
 using UnityEngine;
 
-public class BoardManager : MonoBehaviour {
-
-    private Transform boardHolder;
-    
-
-
+public class BoardManager : MonoBehaviour
+{
+    private System.Random r = new System.Random(System.DateTime.Now.Millisecond);
     public enum BoardItem
     {
         EmptySpace,
         Wall,
-        YellowPickupCapsule,
-        BombTrigger
+        BlueEnemyCapsule,       // always attack target
+        OrangeEnemyCapsule,     // attach target once within a certain radius
+        GreenEnemyCapsule,      // attack target - with raycast avoidance
+        YellowPickUp,
+        BombTrigger             // activates the overhead bomb
     }
 
     public enum WallConnection
@@ -29,22 +29,23 @@ public class BoardManager : MonoBehaviour {
     };
 
     const int ARRAYSIZE = 10;
+    const int BLUECAPSULES = 2;//5;
+    const int ORANGECAPSULES = 2;//5;
+    const int GREENCAPSULES = 5;
+
     public BoardItemData[,] BoardItems = new BoardItemData[ARRAYSIZE, ARRAYSIZE];
 
     public GameObject Bomb;
-    public GameObject Target;
+    public int numberOfPickups;
+    private GameObject _target;
+    public GameObject pickupPrefab;
 
+    // Use this for initialization
     public void setupScene(int level) {
-        // Randomly generate maze
-        // Place pellets in random empty areas in maze
-        // Spawn and deactivate bomb
-        // Move enemy spawn point to random empty areas in maze
-        System.Random r = new System.Random(System.DateTime.Now.Millisecond);
-
         initializeBoard();
 
         // Attach Player's ball to Target
-        Target = GameObject.FindGameObjectWithTag("Player");
+        _target = GameObject.FindGameObjectWithTag("Player");
 
         // Mark Wall Structures
         for (int i = 0; i < ARRAYSIZE * 2 / 3; ++i)
@@ -62,8 +63,8 @@ public class BoardManager : MonoBehaviour {
             //TODO: Connect Walls that are close together?
         }
 
-        // Mark Yellow PickUp Capsules
-        for (int i = 0; i < ARRAYSIZE / 2; ++i)
+        // Mark Blue Enemy Capsules
+        for (int i = 0; i < BLUECAPSULES; ++i)
         {
             int x = r.Next(ARRAYSIZE);
             int z = r.Next(ARRAYSIZE);
@@ -72,18 +73,65 @@ public class BoardManager : MonoBehaviour {
                 --i;
                 continue;
             }
-            BoardItems[x, z].Item = BoardItem.YellowPickupCapsule;
+            BoardItems[x, z].Item = BoardItem.BlueEnemyCapsule;
+        }
+
+        // Mark Orange Enemy Capsules
+        for (int i = 0; i < ORANGECAPSULES; ++i)
+        {
+            int x = r.Next(ARRAYSIZE);
+            int z = r.Next(ARRAYSIZE);
+            if (BoardItems[x, z].Item != BoardItem.EmptySpace)
+            {
+                --i;
+                continue;
+            }
+            BoardItems[x, z].Item = BoardItem.OrangeEnemyCapsule;
+        }
+
+        // Mark Green Enemy Capsules
+        for (int i = 0; i < GREENCAPSULES; ++i)
+        {
+            int x = r.Next(ARRAYSIZE);
+            int z = r.Next(ARRAYSIZE);
+            if (BoardItems[x, z].Item != BoardItem.EmptySpace)
+            {
+                --i;
+                continue;
+            }
+            BoardItems[x, z].Item = BoardItem.GreenEnemyCapsule;
+        }
+
+        // Mark Yellow PickUps
+        if (pickupPrefab != null)
+        {
+            for (int i = 0; i < numberOfPickups; ++i)
+            {
+                int x = r.Next(ARRAYSIZE);
+                int z = r.Next(ARRAYSIZE);
+                if (BoardItems[x, z].Item != BoardItem.EmptySpace)
+                {
+                    --i;
+                    continue;
+                }
+                BoardItems[x, z].Item = BoardItem.YellowPickUp;
+            }
         }
 
         // Mark Bomb Trigger
-        if(Bomb != null)
+        for (int i = 0; i < 1; ++i)
         {
-            BoardItems[r.Next(ARRAYSIZE),
-                       r.Next(ARRAYSIZE)].Item = BoardItem.BombTrigger;
+            int x = r.Next(ARRAYSIZE);
+            int z = r.Next(ARRAYSIZE);
+            if (BoardItems[x, z].Item != BoardItem.EmptySpace)
+            {
+                --i;
+                continue;
+            }
+            BoardItems[x, z].Item = BoardItem.BombTrigger;
         }
 
         placeItemsOnBoard();
-
     }
 
     // Initialize board
@@ -94,7 +142,7 @@ public class BoardManager : MonoBehaviour {
                 BoardItems[i, j] = new BoardItemData {
                                          Item = BoardItem.EmptySpace,
                                          WallConnections = 0
-                                   };
+                };
             }
         }
     }
@@ -110,48 +158,110 @@ public class BoardManager : MonoBehaviour {
       {
           for (int j = 0; j < ARRAYSIZE; ++j)
           {
-              switch(BoardItems[i,j].Item)
-              {
-                  case BoardItem.Wall:
-                      // North-East Quadrant
-                      GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                      cube.transform.position = new Vector3(j, 0f, i);
-                      cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                      // North-West
-                      cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                      cube.transform.position = new Vector3(-j, 0f, i);
-                      cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                      // South-West
-                      cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                      cube.transform.position = new Vector3(-j, 0f, -i);
-                      cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                      // South-East
-                      cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                      cube.transform.position = new Vector3(j, 0f, -i);
-                      cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                      break;
-                  case BoardItem.BombTrigger:
-                      break;
-                  case BoardItem.YellowPickupCapsule:
-                      GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                      capsule.transform.position = new Vector3(j, 0.5f, i);
-                      capsule.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
-                      capsule.GetComponentInChildren<Renderer>().material.color = Color.blue;
-                      capsule.AddComponent<BoxCollider>();
-                      capsule.GetComponentInChildren<BoxCollider>().isTrigger = true;
-                      capsule.tag = "Pick Up";
-                      if(Target != null)
-                      {
-                          capsule.AddComponent<SeekBehavior>();
-                          capsule.GetComponent<SeekBehavior>().target = Target;
-                          capsule.GetComponent<SeekBehavior>().speed = 1.0f;
-                          capsule.SetActive(true);
-                      }
-                      break;
-                  default:
-                      break;
-              }
+            switch(BoardItems[i,j].Item)
+            {
+                case BoardItem.Wall:
+                    // North-East Quadrant
+                    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube.transform.position = new Vector3(j, 0f, i);
+                    cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                    cube.tag = "Wall";
+                    // North-West
+                    cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube.transform.position = new Vector3(-j, 0f, i);
+                    cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                    cube.tag = "Wall";
+                    // South-West
+                    cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube.transform.position = new Vector3(-j, 0f, -i);
+                    cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                    cube.tag = "Wall";
+                    // South-East
+                    cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube.transform.position = new Vector3(j, 0f, -i);
+                    cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                    cube.tag = "Wall";
+                    break;
+                case BoardItem.BombTrigger:
+                    GameObject capsuleTrigger = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                    capsuleTrigger.transform.position = new Vector3(j, 0.5f, i);
+                    capsuleTrigger.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
+                    capsuleTrigger.GetComponentInChildren<Renderer>().material.color = Color.red;
+                    //Texture2D bombTex = Resources.Load("NuclearBomb_Spec") as Texture2D;
+                    //capsuleTrigger.GetComponentInChildren<Renderer>().material.mainTexture = bombTex;
+                    capsuleTrigger.AddComponent<BoxCollider>();
+                    capsuleTrigger.GetComponentInChildren<BoxCollider>().isTrigger = true;
+                    capsuleTrigger.tag = "BombTrigger";
+                    capsuleTrigger.SetActive(true);
+                    break;
+                case BoardItem.YellowPickUp:
+                    //Instantiate(YellowPickUp, new Vector3(j, 0.5f, i), Quaternion.identity);
+                    GameObject yp = Instantiate(pickupPrefab) as GameObject;
+                    yp.transform.position = new Vector3(j, 0.5f, i);
+                    break;
+                case BoardItem.BlueEnemyCapsule:
+                    GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                    capsule.transform.position = new Vector3(j, 0.5f, i);
+                    capsule.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
+                    capsule.GetComponentInChildren<Renderer>().material.color = Color.blue;
+                    capsule.AddComponent<BoxCollider>();
+                    capsule.GetComponentInChildren<BoxCollider>().isTrigger = true;
+                    capsule.tag = "Enemy Capsule";
+                    if(_target != null)
+                    {
+                        capsule.AddComponent<BoardSeekRaycastBehavior>();
+                        capsule.GetComponent<BoardSeekRaycastBehavior>().target = _target;
+                        capsule.GetComponent<BoardSeekRaycastBehavior>().speed = 1.5f;
+                        capsule.GetComponent<BoardSeekRaycastBehavior>().boundaryReached = true;
+                        capsule.SetActive(true);
+                    }
+                    break;
+                case BoardItem.OrangeEnemyCapsule:
+                    GameObject capsuleOrange = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                    capsuleOrange.transform.position = new Vector3(j, 0.5f, i);
+                    capsuleOrange.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
+                    capsuleOrange.GetComponentInChildren<Renderer>().material.color = new Color(1.0f,0.5f,0f);
+                    capsuleOrange.AddComponent<BoxCollider>();
+                    capsuleOrange.GetComponentInChildren<BoxCollider>().isTrigger = true;
+                    capsuleOrange.tag = "Enemy Capsule";
+                    if (_target != null)
+                    {
+                        capsuleOrange.AddComponent<BoardSeekRaycastBehavior>();
+                        capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().target = _target;
+                        capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().speed = r.Next(1,3);
+                        capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().boundary = 5.0f;
+                        capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().boundaryReached = false;
+                        capsuleOrange.SetActive(true);
+                    }
+
+                    break;
+                case BoardItem.GreenEnemyCapsule:
+                    GameObject capsuleGreen = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                    capsuleGreen.transform.position = new Vector3(j, 0.5f, i);
+                    capsuleGreen.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
+                    capsuleGreen.GetComponentInChildren<Renderer>().material.color = Color.green;
+                    capsuleGreen.AddComponent<BoxCollider>();
+                    capsuleGreen.GetComponentInChildren<BoxCollider>().isTrigger = true;
+                    capsuleGreen.tag = "Enemy Capsule";
+                    if (_target != null)
+                    {
+                        capsuleGreen.AddComponent<BoardSeekRaycastBehavior>();
+                        capsuleGreen.GetComponent<BoardSeekRaycastBehavior>().target = _target;
+                        capsuleGreen.GetComponent<BoardSeekRaycastBehavior>().speed = 1.0f;
+                        capsuleGreen.GetComponent<BoardSeekRaycastBehavior>().boundaryReached = true;
+                        capsuleGreen.SetActive(true);
+                    }
+                    break;
+                default:
+                    break;
+            }
           }
       }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
     }
 }

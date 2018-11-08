@@ -17,11 +17,12 @@ public class GameManager : MonoBehaviour {
 
     void Awake() {
       //Check if instance already exists
-          if (instance == null)
+          if (instance == null) {
 
               //if not, set instance to this
               instance = this;
-
+              Debug.Log("Instantiating game manager");
+          }
           //If instance already exists and it's not this:
           else if (instance != this)
 
@@ -73,6 +74,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void gameOver() {
+        Debug.Log("Game over");
         levelText.text = "You were killed after " + level + " stages.";
         levelImage.SetActive(true);
 
