@@ -81,6 +81,14 @@ public class GameManager : MonoBehaviour {
         enabled = false;
     }
 
+    public void winCheck(int score) {
+        Debug.Log("Checking for win condition");
+        if (score >= boardScript.numberOfPickups) {
+            levelText.text = "You win! Starting stage " + level;
+            initGame();
+        }
+    }
+
     // Update is called once per frame
     void Update() {
 

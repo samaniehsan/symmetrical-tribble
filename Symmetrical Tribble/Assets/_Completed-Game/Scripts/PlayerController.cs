@@ -84,6 +84,7 @@ public class PlayerController : MonoBehaviour {
 
         // Add one to the score variable 'count'
         count = count + 1;
+				healthLevel += 10;
 
         // Run the 'SetCountText()' function (see below)
         SetCountText();
@@ -223,5 +224,7 @@ public class PlayerController : MonoBehaviour {
 					Debug.Log("Calling GameManager.gameOver()");
 					GameManager.instance.gameOver();
 			}
+			else
+				GameManager.instance.winCheck(count);
 	}
 }
