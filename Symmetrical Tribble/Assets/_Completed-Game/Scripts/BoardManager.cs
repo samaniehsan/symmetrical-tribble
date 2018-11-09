@@ -40,6 +40,7 @@ public class BoardManager : MonoBehaviour
     private GameObject _target;
     public GameObject pickupPrefab;
     public GameObject enemyCapsulePrefab;
+    public GameObject mazeWallPrefab;
 
     // Use this for initialization
     public void setupScene(int level) {
@@ -47,6 +48,21 @@ public class BoardManager : MonoBehaviour
 
         // Attach Player's ball to Target
         _target = GameObject.FindGameObjectWithTag("Player");
+
+        placeItemsOnBoard();
+    }
+
+    // Initialize board
+    void initializeBoard() {
+        // Initialize
+        for (int i = 0; i < ARRAYSIZE; ++i) {
+            for (int j = 0; j < ARRAYSIZE; ++j) {
+                BoardItems[i, j] = new BoardItemData {
+                                         Item = BoardItem.EmptySpace,
+                                         WallConnections = 0
+                };
+            }
+        }
 
         // Mark Wall Structures
         for (int i = 0; i < ARRAYSIZE * 2 / 3; ++i)
@@ -131,21 +147,6 @@ public class BoardManager : MonoBehaviour
             }
             BoardItems[x, z].Item = BoardItem.BombTrigger;
         }
-
-        placeItemsOnBoard();
-    }
-
-    // Initialize board
-    void initializeBoard() {
-        // Initialize
-        for (int i = 0; i < ARRAYSIZE; ++i) {
-            for (int j = 0; j < ARRAYSIZE; ++j) {
-                BoardItems[i, j] = new BoardItemData {
-                                         Item = BoardItem.EmptySpace,
-                                         WallConnections = 0
-                };
-            }
-        }
     }
 
     void placeItemsOnBoard() {
@@ -163,25 +164,21 @@ public class BoardManager : MonoBehaviour
             {
                 case BoardItem.Wall:
                     // North-East Quadrant
-                    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    GameObject cube = Instantiate(mazeWallPrefab) as GameObject;
                     cube.transform.position = new Vector3(j, 0f, i);
                     cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                    cube.tag = "Wall";
                     // North-West
-                    cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube = Instantiate(mazeWallPrefab) as GameObject;
                     cube.transform.position = new Vector3(-j, 0f, i);
                     cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                    cube.tag = "Wall";
                     // South-West
-                    cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube = cube = Instantiate(mazeWallPrefab) as GameObject;
                     cube.transform.position = new Vector3(-j, 0f, -i);
                     cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                    cube.tag = "Wall";
                     // South-East
-                    cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube = cube = Instantiate(mazeWallPrefab) as GameObject;
                     cube.transform.position = new Vector3(j, 0f, -i);
                     cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                    cube.tag = "Wall";
                     break;
                 case BoardItem.BombTrigger:
                     GameObject capsuleTrigger = GameObject.CreatePrimitive(PrimitiveType.Capsule);
