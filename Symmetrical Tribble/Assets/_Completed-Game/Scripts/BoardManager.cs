@@ -164,20 +164,24 @@ public class BoardManager : MonoBehaviour
             {
                 case BoardItem.Wall:
                     // North-East Quadrant
-                    GameObject cube = Instantiate(mazeWallPrefab) as GameObject;
-                    cube.transform.position = new Vector3(j, 0f, i);
+                    GameObject cube = Instantiate(mazeWallPrefab,
+                                                  new Vector3(j, 0f, i),
+                                                  Quaternion.identity) as GameObject;
                     cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
                     // North-West
-                    cube = Instantiate(mazeWallPrefab) as GameObject;
-                    cube.transform.position = new Vector3(-j, 0f, i);
+                    cube = Instantiate(mazeWallPrefab,
+                                       new Vector3(-j, 0f, i),
+                                       Quaternion.identity) as GameObject;
                     cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
                     // South-West
-                    cube = cube = Instantiate(mazeWallPrefab) as GameObject;
-                    cube.transform.position = new Vector3(-j, 0f, -i);
+                    cube = Instantiate(mazeWallPrefab,
+                                       new Vector3(-j, 0f, -i),
+                                       Quaternion.identity) as GameObject;
                     cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
                     // South-East
-                    cube = cube = Instantiate(mazeWallPrefab) as GameObject;
-                    cube.transform.position = new Vector3(j, 0f, -i);
+                    cube = Instantiate(mazeWallPrefab,
+                                       new Vector3(j, 0f, -i),
+                                       Quaternion.identity) as GameObject;
                     cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
                     break;
                 case BoardItem.BombTrigger:
@@ -207,7 +211,6 @@ public class BoardManager : MonoBehaviour
                         capsuleBlue.GetComponent<BoardSeekRaycastBehavior>().target = _target;
                         capsuleBlue.GetComponent<BoardSeekRaycastBehavior>().speed = 1.5f;
                         capsuleBlue.GetComponent<BoardSeekRaycastBehavior>().boundaryReached = true;
-                        capsuleBlue.SetActive(true);
                     }
                     break;
                 case BoardItem.OrangeEnemyCapsule:
@@ -221,7 +224,6 @@ public class BoardManager : MonoBehaviour
                         capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().speed = r.Next(1,3);
                         capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().boundary = 5.0f;
                         capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().boundaryReached = false;
-                        capsuleOrange.SetActive(true);
                     }
 
                     break;
@@ -235,7 +237,6 @@ public class BoardManager : MonoBehaviour
                         capsuleGreen.GetComponent<BoardSeekRaycastBehavior>().target = _target;
                         capsuleGreen.GetComponent<BoardSeekRaycastBehavior>().speed = 1.0f;
                         capsuleGreen.GetComponent<BoardSeekRaycastBehavior>().boundaryReached = true;
-                        capsuleGreen.SetActive(true);
                     }
                     break;
                 default:

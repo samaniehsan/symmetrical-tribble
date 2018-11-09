@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
     public float levelStartDelay = 2f;
 
-    private int level = 1;
+    private int level = 0;
     private Text levelText;
     private GameObject levelImage; // To hide the level while it's being built
     private BoardManager boardScript;
@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour {
         levelImage.SetActive(true);
 
         Invoke("hideLevelImage", levelStartDelay);
-
+        Debug.Log("Setting up level " + level);
         boardScript.setupScene(level);
     }
 
