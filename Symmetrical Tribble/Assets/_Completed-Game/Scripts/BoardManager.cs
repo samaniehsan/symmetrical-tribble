@@ -39,6 +39,7 @@ public class BoardManager : MonoBehaviour
     public int numberOfPickups;
     private GameObject _target;
     public GameObject pickupPrefab;
+    public GameObject enemyCapsulePrefab;
 
     // Use this for initialization
     public void setupScene(int level) {
@@ -200,33 +201,25 @@ public class BoardManager : MonoBehaviour
                     yp.transform.position = new Vector3(j, 0.5f, i);
                     break;
                 case BoardItem.BlueEnemyCapsule:
-                    GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                    capsule.transform.position = new Vector3(j, 0.5f, i);
-                    capsule.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
-                    capsule.GetComponentInChildren<Renderer>().material.color = Color.blue;
-                    capsule.AddComponent<BoxCollider>();
-                    capsule.GetComponentInChildren<BoxCollider>().isTrigger = true;
-                    capsule.tag = "Enemy Capsule";
+                    GameObject capsuleBlue = GameObject.Instantiate(enemyCapsulePrefab) as GameObject;
+                    capsuleBlue.GetComponent<Renderer>().material.color = Color.blue;
+                    capsuleBlue.transform.position = new Vector3(j, 0.5f, i);
+                    capsuleBlue.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
                     if(_target != null)
                     {
-                        capsule.AddComponent<BoardSeekRaycastBehavior>();
-                        capsule.GetComponent<BoardSeekRaycastBehavior>().target = _target;
-                        capsule.GetComponent<BoardSeekRaycastBehavior>().speed = 1.5f;
-                        capsule.GetComponent<BoardSeekRaycastBehavior>().boundaryReached = true;
-                        capsule.SetActive(true);
+                        capsuleBlue.GetComponent<BoardSeekRaycastBehavior>().target = _target;
+                        capsuleBlue.GetComponent<BoardSeekRaycastBehavior>().speed = 1.5f;
+                        capsuleBlue.GetComponent<BoardSeekRaycastBehavior>().boundaryReached = true;
+                        capsuleBlue.SetActive(true);
                     }
                     break;
                 case BoardItem.OrangeEnemyCapsule:
-                    GameObject capsuleOrange = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                    GameObject capsuleOrange = GameObject.Instantiate(enemyCapsulePrefab) as GameObject;
                     capsuleOrange.transform.position = new Vector3(j, 0.5f, i);
                     capsuleOrange.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
                     capsuleOrange.GetComponentInChildren<Renderer>().material.color = new Color(1.0f,0.5f,0f);
-                    capsuleOrange.AddComponent<BoxCollider>();
-                    capsuleOrange.GetComponentInChildren<BoxCollider>().isTrigger = true;
-                    capsuleOrange.tag = "Enemy Capsule";
                     if (_target != null)
                     {
-                        capsuleOrange.AddComponent<BoardSeekRaycastBehavior>();
                         capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().target = _target;
                         capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().speed = r.Next(1,3);
                         capsuleOrange.GetComponent<BoardSeekRaycastBehavior>().boundary = 5.0f;
@@ -236,16 +229,12 @@ public class BoardManager : MonoBehaviour
 
                     break;
                 case BoardItem.GreenEnemyCapsule:
-                    GameObject capsuleGreen = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                    GameObject capsuleGreen = GameObject.Instantiate(enemyCapsulePrefab) as GameObject;
                     capsuleGreen.transform.position = new Vector3(j, 0.5f, i);
                     capsuleGreen.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
                     capsuleGreen.GetComponentInChildren<Renderer>().material.color = Color.green;
-                    capsuleGreen.AddComponent<BoxCollider>();
-                    capsuleGreen.GetComponentInChildren<BoxCollider>().isTrigger = true;
-                    capsuleGreen.tag = "Enemy Capsule";
                     if (_target != null)
                     {
-                        capsuleGreen.AddComponent<BoardSeekRaycastBehavior>();
                         capsuleGreen.GetComponent<BoardSeekRaycastBehavior>().target = _target;
                         capsuleGreen.GetComponent<BoardSeekRaycastBehavior>().speed = 1.0f;
                         capsuleGreen.GetComponent<BoardSeekRaycastBehavior>().boundaryReached = true;
