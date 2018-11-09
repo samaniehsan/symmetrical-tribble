@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour {
     private Text levelText;
     private GameObject levelImage; // To hide the level while it's being built
     private BoardManager boardScript;
+    private GameObject bomb;
     private bool doingSetup = true;
 
     void Awake() {
@@ -71,6 +72,16 @@ public class GameManager : MonoBehaviour {
 
 
         doingSetup = false;
+    }
+
+    public void triggerBomb() {
+      GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
+      bomb.AddComponent<SeekBehavior>();
+      bomb.GetComponent<SeekBehavior>().target = GameObject.FindGameObjectWithTag("Player");
+      bomb.GetComponent<SeekBehavior>().speed = 3.0f;
+      bomb.GetComponent<SeekBehavior>().initialHeight = 25.0f;
+
+      GetComponent<Collider>().gameObject.SetActive(false);
     }
 
     public void gameOver() {

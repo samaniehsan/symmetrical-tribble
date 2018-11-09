@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour {
 	public float speed;
 	public Text countText;
     public Text healthStatusText;
-    public GameObject bomb;
 
 	// Create private references to the rigidbody component on the player, and the count of pick up objects picked up so far
 	private Rigidbody rb;
@@ -68,13 +67,7 @@ public class PlayerController : MonoBehaviour {
 
     private void HandleBombTriggerCollision(Collider collider)
     {
-        GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
-        bomb.AddComponent<SeekBehavior>();
-        bomb.GetComponent<SeekBehavior>().target = GameObject.FindGameObjectWithTag("Player");
-        bomb.GetComponent<SeekBehavior>().speed = 3.0f;
-        bomb.GetComponent<SeekBehavior>().initialHeight = 25.0f;
-
-        collider.gameObject.SetActive(false);
+        GameManager.instance.triggerBomb();
     }
 
     void HandleGoldenBallPickup(Collider other)

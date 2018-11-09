@@ -41,6 +41,7 @@ public class BoardManager : MonoBehaviour
     public GameObject pickupPrefab;
     public GameObject enemyCapsulePrefab;
     public GameObject mazeWallPrefab;
+    public GameObject bombTriggerPrefab;
 
     // Use this for initialization
     public void setupScene(int level) {
@@ -185,16 +186,12 @@ public class BoardManager : MonoBehaviour
                     cube.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
                     break;
                 case BoardItem.BombTrigger:
-                    GameObject capsuleTrigger = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                    capsuleTrigger.transform.position = new Vector3(j, 0.5f, i);
+                    GameObject capsuleTrigger = Instantiate(bombTriggerPrefab,
+                                                            new Vector3(j, 0.5f, i),
+                                                            Quaternion.identity) as GameObject;
                     capsuleTrigger.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
-                    capsuleTrigger.GetComponentInChildren<Renderer>().material.color = Color.red;
                     //Texture2D bombTex = Resources.Load("NuclearBomb_Spec") as Texture2D;
                     //capsuleTrigger.GetComponentInChildren<Renderer>().material.mainTexture = bombTex;
-                    capsuleTrigger.AddComponent<BoxCollider>();
-                    capsuleTrigger.GetComponentInChildren<BoxCollider>().isTrigger = true;
-                    capsuleTrigger.tag = "BombTrigger";
-                    capsuleTrigger.SetActive(true);
                     break;
                 case BoardItem.YellowPickUp:
                     //Instantiate(YellowPickUp, new Vector3(j, 0.5f, i), Quaternion.identity);
@@ -202,7 +199,7 @@ public class BoardManager : MonoBehaviour
                     yp.transform.position = new Vector3(j, 0.5f, i);
                     break;
                 case BoardItem.BlueEnemyCapsule:
-                    GameObject capsuleBlue = GameObject.Instantiate(enemyCapsulePrefab) as GameObject;
+                    GameObject capsuleBlue = Instantiate(enemyCapsulePrefab) as GameObject;
                     capsuleBlue.GetComponent<Renderer>().material.color = Color.blue;
                     capsuleBlue.transform.position = new Vector3(j, 0.5f, i);
                     capsuleBlue.transform.localScale = new Vector3(scaleX / 2, scaleY / 4, scaleZ / 2);
