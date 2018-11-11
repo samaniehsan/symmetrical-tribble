@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour {
           boardScript = GetComponent<BoardManager>();
 
           //Call the InitGame function to initialize the first level
-          initGame();
+          // initGame();
     }
 
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
@@ -92,12 +92,12 @@ public class GameManager : MonoBehaviour {
         enabled = false;
     }
 
-    public void winCheck(int score) {
-        Debug.Log("Checking for win condition");
-        if (score >= boardScript.numberOfPickups) {
-            levelText.text = "You win! Starting stage " + level;
-            initGame();
-        }
+    public int getNumPickups() {
+        return boardScript.numberOfPickups;
+    }
+
+    public GameObject getTarget() {
+        return boardScript.getTarget();
     }
 
     // Update is called once per frame

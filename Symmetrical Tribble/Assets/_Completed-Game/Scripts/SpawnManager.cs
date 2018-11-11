@@ -12,6 +12,7 @@ public class SpawnManager : MonoBehaviour
     void Start ()
     {
         spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
+        Debug.Log(spawnPoints);
         // Call the Spawn function after a delay of the spawnTime and then continue to call after the same amount of time.
         InvokeRepeating ("Spawn", spawnTime, spawnTime);
     }
@@ -19,14 +20,24 @@ public class SpawnManager : MonoBehaviour
 
     void Spawn ()
     {
-        // Select enemy from list of enemy prefabs
-        GameObject enemy = enemies[Random.Range (0, enemies.Length)];
+        try {
+            // Select enemy from list of enemy prefabs
+            GameObject enemy = enemies[Random.Range (0, enemies.Length)];
 
-        // Find a random index between zero and one less than the number of spawn points.
-        // Select spawn point from list of spawn points
-        int spawnPointIndex = Random.Range (0, spawnPoints.Length);
+            // Select spawn point from list of spawn points
+            int spawnPointIndex = Random.Range (0, spawnPoints.Length);
 
-        // Create an instance of the enemy prefab at the randomly selected spawn point's position and rotation.
-        Instantiate (enemy, spawnPoints[spawnPointIndex].transform.position, spawnPoints[spawnPointIndex].transform.rotation);
+            if (! enemy.GetComponent<BoardSeekRaycastBehavior>().boundaryReached) {
+                enemy.GetComponent<BoardSeekRaycastBehavior>().speed = Random.Range(1, 4);
+                enemy.GetComponent<BoardSeekRaycastBehavior>().boundary = Random.Range(3, 6);
+                enemy.GetComponent<BoardSeekRaycastBehavior>().target = GameManager.instance.getTarget();
+            }
+
+            Vector3 spawnPosition = spawnPoints[spawnPointIndex].transform.position + new Vector3(0, 0.5f, 0);
+            // Create an instance of the enemy prefab at the randomly selected spawn point's position and rotation.
+            GameObject spawned = Instantiate (enemy, spawnPosition, spawnPoints[spawnPointIndex].transform.rotation);
+            spawned.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+
+        } catch {}
     }
 }

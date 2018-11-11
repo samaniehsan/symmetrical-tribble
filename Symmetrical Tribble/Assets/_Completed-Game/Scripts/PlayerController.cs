@@ -2,13 +2,14 @@
 
 // Include the namespace required to use Unity UI
 using UnityEngine.UI;
-
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
 
 	// Create public variables for player speed, and for the Text UI game objects
 	public float speed;
+	public float restartLevelDelay = 1f;
 	public Text countText;
     public Text healthStatusText;
 
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour {
 
 		// Run the SetCountText function to update the UI (see below)
 		SetCountText ();
+		SetHealthIndicator();
 
 	}
 
@@ -81,6 +83,7 @@ public class PlayerController : MonoBehaviour {
 
         // Run the 'SetCountText()' function (see below)
         SetCountText();
+				checkGameOverCondition();
 
     }
 
@@ -211,13 +214,22 @@ public class PlayerController : MonoBehaviour {
         } */
 	}
 
+	public void Restart () {
+			SceneManager.LoadScene(0);
+	}
+
 	void checkGameOverCondition() {
 			Debug.Log("Checking game over condition - health level is " + healthLevel);
 			if (this.healthLevel <= 0) {
 					Debug.Log("Calling GameManager.gameOver()");
 					GameManager.instance.gameOver();
+			} else {
+					Debug.Log("Checking for win condition");
+					if (count >= GameManager.instance.getNumPickups()) {
+							Invoke("Restart", restartLevelDelay);
+							enabled = false;
+					}
 			}
-			else
-				GameManager.instance.winCheck(count);
+
 	}
 }
