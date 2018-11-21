@@ -10,7 +10,7 @@ public class RobotController : MonoBehaviour {
     public Text healthStatusText;
     public float restartLevelDelay = 1f;
     // public float speed;
-    public float rotateSpeed = 50.0f;
+    public float rotateSpeed = 20.0f;
 
     // Vector3 smoothDeltaPosition = Vector3.zero;
     // Vector2 velocity = Vector2.zero;
@@ -32,59 +32,31 @@ public class RobotController : MonoBehaviour {
         SetHealthIndicator();
     }
 
+    void lookAtMouse() {
+        Plane playerPlane = new Plane(Vector3.up, transform.position);
 
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        float hitdist = 0.0f;
+
+        if (playerPlane.Raycast(ray, out hitdist)) {
+            Vector3 targetPoint = ray.GetPoint(hitdist);
+
+            Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
+
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+        }
+    }
 
     void Update() {
-      float rotation = Input.GetAxis("Mouse X") * rotateSpeed;
+      // float rotation = Input.GetAxis("Mouse X") * rotateSpeed;
 
       // rotation *= Time.deltaTime;
       if (Input.GetMouseButton(0)) {
-        transform.Rotate(0, rotation, 0);
+        // transform.Rotate(0, rotation, 0);
+        lookAtMouse();
       }
 
-      // transform.Rotate(0, Input.GetAxis("Horizontal"), 0);
-        // Vector3 velocity = new Vector3(Input.GetAxis("Horizontal") * 150f,
-        //                                0.0f,
-        //                                Input.GetAxis("Vertical") * 3.0f);
-        // //Vector3.Normalize(velocity);
-        //
-        // float walkDotProd = Vector3.Dot(velocity, transform.forward);
-        // float turnDotProd = Vector3.Dot(velocity, transform.right);
-        //
-        // bool shouldWalk = walkDotProd > 0.5f || walkDotProd < -0.5f;
-        // bool shouldTurn = turnDotProd > 0.5f || turnDotProd < -0.5f;
-        //
-        // anim.SetBool("walk", shouldWalk);
-        // anim.SetBool("turn", shouldTurn);
-        //
-        // if (shouldWalk) {
-        //     Debug.Log("(x, y): (" + velocity.x + ", " + velocity.y + ")");
-        //     // Debug.Log("X: " + velocity.x);
-        //     anim.SetFloat("speed", velocity.y);
-        //     anim.SetFloat("rotation", velocity.x);
-        // } else if (shouldTurn){
-        //     anim.SetFloat("rotation", velocity.x);
-        // }
-
-        // Vector2 direction = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        //
-        // velocity = direction;
-        //
-        // // Low-pass filter the deltaMove
-        // // float smooth = Mathf.Min(1.0f, Time.deltaTime/0.15f);
-        // // smoothDeltaPosition = Vector3.Slerp(smoothDeltaPosition, deltaPosition, smooth);
-        //
-        // bool shouldMove = velocity.magnitude > 0.5f;
-        // anim.SetBool("move", shouldMove);
-        //
-        // if (shouldMove) {
-        //     Debug.Log("velocity" + velocity);
-        //     //
-        //     anim.SetFloat("velX", velocity.x);
-        //     Debug.Log("velX: " + velocity.x);
-        //     anim.SetFloat("velY", velocity.y);
-        //     Debug.Log("velY: " + velocity.y);
-        // }
     }
     void OnTriggerEnter(Collider other)
 	{
