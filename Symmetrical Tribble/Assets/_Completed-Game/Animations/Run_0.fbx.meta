@@ -862,7 +862,7 @@ ModelImporter:
     - name: LeftHandPinky1
       parentName: LeftHand
       position: {x: -0.06565999, y: -0.007825112, z: -0.03225126}
-      rotation: {x: -0.00091311283, y: 0.012162998, z: 0.021223601, w: 0.9997004}
+      rotation: {x: -0.00091311283, y: 0.012162996, z: 0.021223601, w: 0.9997003}
       scale: {x: 0.99999994, y: 0.9999999, z: 0.9999999}
     - name: LeftHandPinky2
       parentName: LeftHandPinky1
