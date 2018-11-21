@@ -5,11 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class RobotController : MonoBehaviour {
     Animator anim;
+    // CharacterController controller;
     public Text countText;
     public Text healthStatusText;
     public float restartLevelDelay = 1f;
-    public float speed;
-    // public float rotateSpeed;
+    // public float speed;
+    public float rotateSpeed = 50.0f;
 
     // Vector3 smoothDeltaPosition = Vector3.zero;
     // Vector2 velocity = Vector2.zero;
@@ -22,6 +23,7 @@ public class RobotController : MonoBehaviour {
 
     void Start() {
         anim = GetComponent<Animator>();
+        // controller = GetComponent<CharacterController>();
 
         count = 0;
 
@@ -33,7 +35,14 @@ public class RobotController : MonoBehaviour {
 
 
     void Update() {
+      float rotation = Input.GetAxis("Mouse X") * rotateSpeed;
 
+      // rotation *= Time.deltaTime;
+      if (Input.GetMouseButton(0)) {
+        transform.Rotate(0, rotation, 0);
+      }
+
+      // transform.Rotate(0, Input.GetAxis("Horizontal"), 0);
         // Vector3 velocity = new Vector3(Input.GetAxis("Horizontal") * 150f,
         //                                0.0f,
         //                                Input.GetAxis("Vertical") * 3.0f);

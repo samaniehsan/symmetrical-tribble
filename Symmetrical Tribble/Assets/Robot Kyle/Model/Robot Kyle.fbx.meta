@@ -639,7 +639,7 @@ ModelImporter:
     - name: Left_Middle_Finger_Joint_01b
       parentName: Left_Middle_Finger_Joint_01a
       position: {x: -0.044052828, y: 2.220446e-18, z: 1.3147821e-18}
-      rotation: {x: 0.0006498137, y: 0.00044095775, z: 0.01030452, w: 0.9999466}
+      rotation: {x: 0.00064981374, y: 0.00044095775, z: 0.010304521, w: 0.9999466}
       scale: {x: 1, y: 1, z: 1}
     - name: Left_Middle_Finger_Joint_01c
       parentName: Left_Middle_Finger_Joint_01b
@@ -729,7 +729,7 @@ ModelImporter:
     - name: Right_Middle_Finger_Joint_01b
       parentName: Right_Middle_Finger_Joint_01a
       position: {x: 0.044053018, y: 0.0000006337014, z: -0.000000019575731}
-      rotation: {x: 0.0006498137, y: 0.00044095775, z: 0.01030452, w: 0.9999466}
+      rotation: {x: 0.00064981374, y: 0.00044095775, z: 0.010304521, w: 0.9999466}
       scale: {x: 1, y: 1, z: 1}
     - name: Right_Middle_Finger_Joint_01c
       parentName: Right_Middle_Finger_Joint_01b

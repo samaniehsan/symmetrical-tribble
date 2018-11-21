@@ -184,7 +184,8 @@ ModelImporter:
     4300006: Tounge_Mesh
     4300008: Le_Eye_Mesh
     4300010: Ri_Eye_Mesh
-    7400000: Run_90L
+    7400000: RunFwdLeft
+    7400002: RunLeft
     9500000: //RootNode
     13700000: Lw_Teeth_Mesh
     13700002: Tounge_Mesh
@@ -219,18 +220,46 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Run_90L
+      name: RunFwdLeft
       takeName: Run_90L
-      firstFrame: 0
-      lastFrame: 71
+      firstFrame: 15.299999
+      lastFrame: 70
       wrapMode: 0
-      orientationOffsetY: 0
+      orientationOffsetY: 8.1
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
-      loopBlend: 0
+      loopBlend: 1
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: RunLeft
+      takeName: Run_90L
+      firstFrame: 13
+      lastFrame: 66.8
+      wrapMode: 0
+      orientationOffsetY: 54.26
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
       loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 0
