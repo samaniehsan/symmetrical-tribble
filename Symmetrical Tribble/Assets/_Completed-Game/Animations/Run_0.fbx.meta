@@ -184,7 +184,7 @@ ModelImporter:
     4300006: Tounge_Mesh
     4300008: Le_Eye_Mesh
     4300010: Ri_Eye_Mesh
-    7400000: Run_0
+    7400000: RunFwd
     9500000: //RootNode
     13700000: Lw_Teeth_Mesh
     13700002: Tounge_Mesh
@@ -220,12 +220,12 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Run_0
+      name: RunFwd
       takeName: Run_0
       firstFrame: 8
-      lastFrame: 62
+      lastFrame: 60.2
       wrapMode: 0
-      orientationOffsetY: 1.16
+      orientationOffsetY: 1.36
       level: 0
       cycleOffset: 0
       loop: 0

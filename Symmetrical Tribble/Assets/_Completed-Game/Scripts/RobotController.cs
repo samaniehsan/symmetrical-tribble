@@ -49,12 +49,10 @@ public class RobotController : MonoBehaviour {
     }
 
     void Update() {
-      // float rotation = Input.GetAxis("Mouse X") * rotateSpeed;
-
-      // rotation *= Time.deltaTime;
       if (Input.GetMouseButton(0)) {
-        // transform.Rotate(0, rotation, 0);
         lookAtMouse();
+      } else {
+          transform.rotation = Quaternion.LookRotation(new Vector3(0f, 0f, 0f));
       }
 
     }

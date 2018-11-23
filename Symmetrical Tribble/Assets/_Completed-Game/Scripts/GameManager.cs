@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
     public float levelStartDelay = 2f;
 
-    private int level = 0;
+    private int level = 3;
     private Text levelText;
     private GameObject levelImage; // To hide the level while it's being built
     private BoardManager boardScript;
