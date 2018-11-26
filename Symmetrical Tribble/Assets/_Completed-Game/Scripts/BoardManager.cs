@@ -19,10 +19,10 @@ public class BoardManager : MonoBehaviour
     // public GameObject Bomb;
     [HideInInspector]
     public int numberOfPickups;
-    public GameObject wallPrefab;
-    public GameObject pickupPrefab;
-    public GameObject spawnPointPrefab;
-    public GameObject bombTriggerPrefab;
+    public GameObject[] wallPrefab;
+    public GameObject[] pickupPrefab;
+    public GameObject[] spawnPointPrefab;
+    public GameObject[] bombTriggerPrefab;
     public Count pickupCount = new Count(10, 15);
     public Count wallCount = new Count(40, 75);
     public Count bombTriggerCount = new Count(1, 3);
@@ -39,7 +39,7 @@ public class BoardManager : MonoBehaviour
 
         for (int x = boardBuffer - boardSize; x < boardSize - boardBuffer; x++) {
             for (int y = boardBuffer - boardSize; y < boardSize - boardBuffer; y++) {
-                gridPositions.Add(new Vector3(x, 0f, y));
+                gridPositions.Add(new Vector3(x, 0.1f, y));
             }
         }
     }
@@ -54,13 +54,14 @@ public class BoardManager : MonoBehaviour
         return randomPosition;
     }
 
-    int layoutRandomObject(GameObject item, int minimum, int maximum) {
+    int layoutRandomObject(GameObject[] item, int minimum, int maximum) {
         int objectCount = Random.Range(minimum, maximum + 1);
 
         for (int i = 0; i < objectCount; i++) {
             Vector3 randPos = randomPosition();
+            int randItem = Random.Range(0, item.Length);
 
-            Instantiate(item, randPos, Quaternion.identity, boardHolder);
+            Instantiate(item[randItem], randPos, Quaternion.identity, boardHolder);
         }
 
         return objectCount;

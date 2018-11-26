@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
     public float levelStartDelay = 2f;
 
-    private int level = 0;
+    private int level = 3;
     private Text levelText;
     private GameObject levelImage; // To hide the level while it's being built
     private BoardManager boardScript;
@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour {
       bomb.GetComponent<SeekBehavior>().speed = 3.0f;
       bomb.GetComponent<SeekBehavior>().initialHeight = 25.0f;
 
-      GetComponent<Collider>().gameObject.SetActive(false);
+      bomb.GetComponent<Collider>().gameObject.SetActive(false);
     }
 
     public void gameOver() {
