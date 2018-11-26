@@ -15,10 +15,8 @@ public class BoardManager : MonoBehaviour
             maximum = max;
         }
     }
-    // public GameObject[] boardItems;
-    // public GameObject Bomb;
-    [HideInInspector]
-    public int numberOfPickups;
+
+    private int numberOfPickups;
     public GameObject[] wallPrefab;
     public GameObject[] pickupPrefab;
     public GameObject[] spawnPointPrefab;
@@ -26,7 +24,6 @@ public class BoardManager : MonoBehaviour
     public Count pickupCount = new Count(10, 15);
     public Count wallCount = new Count(40, 75);
     public Count bombTriggerCount = new Count(1, 3);
-    // public GameObject bombTriggerPrefab;
 
     private GameObject _target;
     private int boardSize = 10; // Set this dynamically from ground prefab at some point
@@ -85,6 +82,10 @@ public class BoardManager : MonoBehaviour
 
     public GameObject getTarget() {
         return _target;
+    }
+
+    public int getNumPickups() {
+        return numberOfPickups;
     }
 
     // Update is called once per frame

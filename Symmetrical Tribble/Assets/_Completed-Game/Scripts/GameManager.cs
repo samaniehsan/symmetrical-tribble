@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public int getNumPickups() {
-        return boardScript.numberOfPickups;
+        return boardScript.getNumPickups();
     }
 
     public GameObject getTarget() {
