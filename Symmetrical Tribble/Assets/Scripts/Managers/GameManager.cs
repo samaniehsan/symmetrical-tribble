@@ -34,9 +34,6 @@ public class GameManager : MonoBehaviour {
 
           //Get a component reference to the attached BoardManager script
           boardScript = GetComponent<BoardManager>();
-
-          //Call the InitGame function to initialize the first level
-          // initGame();
     }
 
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
