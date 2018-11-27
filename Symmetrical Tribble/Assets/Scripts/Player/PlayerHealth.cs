@@ -17,6 +17,8 @@ public class PlayerHealth : MonoBehaviour {
     Animator anim;
     AudioSource playerAudio;
     PlayerMovement playerMovement;
+    // Rigidbody rb;
+    Collider c;
     // PlayerShooting playerShooting;
     bool isDead;
     bool damaged;
@@ -43,6 +45,8 @@ public class PlayerHealth : MonoBehaviour {
         anim = GetComponent <Animator> ();
         playerAudio = GetComponent <AudioSource> ();
         playerMovement = GetComponent <PlayerMovement> ();
+        // rb = GetComponent<Rigidbody>();
+        c = GetComponent<CapsuleCollider>();
         // playerShooting = GetComponentInChildren <PlayerShooting> ();
         currentHealth = startingHealth;
         setHealthText();
@@ -76,6 +80,9 @@ public class PlayerHealth : MonoBehaviour {
     void Death() {
         isDead = true;
         anim.SetTrigger("die");
+        c.isTrigger = true;
+        // rb.isKinematic = true;
+        // rb.detectCollisions = false;
         // playerAudio.clip = deathClip;
         // playerAudio.Play();
 

@@ -82,7 +82,8 @@ public class GameManager : MonoBehaviour {
 
     public void gameOver() {
         Debug.Log("Game over");
-
+        anim.SetTrigger("GameOver");
+    
         enabled = false;
     }
 
@@ -100,6 +101,10 @@ public class GameManager : MonoBehaviour {
           Debug.Log("You win - starting next level");
           Invoke("restartLevel", levelStartDelay);
       }
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     // Update is called once per frame

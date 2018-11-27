@@ -24,6 +24,7 @@ public class BoardManager : MonoBehaviour
     public Count pickupCount = new Count(10, 15);
     public Count wallCount = new Count(40, 75);
     public Count bombTriggerCount = new Count(1, 3);
+    public Count spawnPointCount = new Count(1, 3);
 
     private GameObject _target;
     private int boardSize = 10; // Set this dynamically from ground prefab at some point
@@ -76,8 +77,7 @@ public class BoardManager : MonoBehaviour
         layoutRandomObject(bombTriggerPrefab, bombTriggerCount.minimum, bombTriggerCount.maximum);
 
         // Determine number of enemy spawn points based on current level
-        int spCount = (int)Mathf.Log(level, 2f);
-        layoutRandomObject(spawnPointPrefab, spCount, spCount);
+        layoutRandomObject(spawnPointPrefab, spawnPointCount.minimum, spawnPointCount.maximum);
     }
 
     public GameObject getTarget() {
