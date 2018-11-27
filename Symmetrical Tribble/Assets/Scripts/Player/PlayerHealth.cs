@@ -6,7 +6,7 @@ using System.Collections;
 public class PlayerHealth : MonoBehaviour {
 
     public int startingHealth = 100;
-    [HideInInspector]
+    // [HideInInspector]
     public int currentHealth;
     public Text healthStatusText;
     public Image damageImage;
@@ -36,7 +36,7 @@ public class PlayerHealth : MonoBehaviour {
         new HealthLevel("Super strong", Color.green), new HealthLevel("Strong", Color.green),
         new HealthLevel("Ok", Color.blue), new HealthLevel("Injured", Color.cyan),
         new HealthLevel("Weak", Color.yellow), new HealthLevel("Running on fumes", Color.yellow),
-        new HealthLevel("Like a zombie", Color.red), new HealthLevel("Dead", Color.red)
+        new HealthLevel("Like a zombie", Color.red), new HealthLevel("Dying", Color.red)
     };
 
     void Awake() {
@@ -61,14 +61,14 @@ public class PlayerHealth : MonoBehaviour {
         damaged = true;
         currentHealth -= amount;
         setHealthText();
-        playerAudio.Play();
+        // playerAudio.Play();
         if(currentHealth <= 0 && !isDead) {
             Death();
         }
     }
 
     void setHealthText() {
-        int statusIndex = (startingHealth - currentHealth) / healthLevel.Length;
+        int statusIndex = Mathf.Clamp((startingHealth - currentHealth) / healthLevel.Length, 0, healthLevel.Length-1);
         healthStatusText.text = healthLevel[statusIndex].text;
         healthStatusText.color = healthLevel[statusIndex].color;
     }
@@ -76,11 +76,11 @@ public class PlayerHealth : MonoBehaviour {
     void Death() {
         isDead = true;
         anim.SetTrigger("die");
-
         // playerAudio.clip = deathClip;
         // playerAudio.Play();
 
         playerMovement.enabled = false;
+        // anim.enabled = false;
         // playerShooting.enabled = false;
     }
 }

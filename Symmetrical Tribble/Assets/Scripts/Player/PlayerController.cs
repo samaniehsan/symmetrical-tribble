@@ -59,10 +59,9 @@ public class PlayerController : MonoBehaviour {
         {
             EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
             if(enemyHealth != null) {
-                enemyHealth.TakeDamage(20);
+                enemyHealth.TakeDamage(40);
             }
             health.TakeDamage(10);
-            // enemy.gameObject.SetActive(false);
         }
         else
         {

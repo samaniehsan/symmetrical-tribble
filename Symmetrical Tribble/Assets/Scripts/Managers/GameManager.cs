@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour {
     private BoardManager boardScript;
     private GameObject bomb;
 
+    Animator anim;
+
     void Awake() {
       //Check if instance already exists
           if (instance == null) {
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviour {
 
           //Get a component reference to the attached BoardManager script
           boardScript = GetComponent<BoardManager>();
+          anim = GetComponent<Animator>();
     }
 
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
@@ -77,8 +80,6 @@ public class GameManager : MonoBehaviour {
 
     public void gameOver() {
         Debug.Log("Game over");
-        levelText.text = "You were killed after " + level + " stages.";
-        levelImage.SetActive(true);
 
         enabled = false;
     }
