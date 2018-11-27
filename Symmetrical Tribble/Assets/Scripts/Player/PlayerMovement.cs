@@ -13,8 +13,6 @@ public class PlayerMovement : MonoBehaviour {
     void Update() {
       if (Input.GetMouseButton(0)) {
         lookAtMouse();
-      // } else {
-      //     transform.rotation = Quaternion.LookRotation(new Vector3(0f, 0f, 0f));
       }
     }
 
@@ -30,8 +28,7 @@ public class PlayerMovement : MonoBehaviour {
 
             Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
 
-            // transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
-            rb.MoveRotation (targetRotation);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
         }
     }
 
