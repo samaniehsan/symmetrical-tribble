@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour {
     private Text levelText;
     private GameObject levelImage; // To hide the level while it's being built
     private BoardManager boardScript;
+    private SpawnManager spawnScript;
     private GameObject bomb;
 
     Animator anim;
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour {
 
           //Get a component reference to the attached BoardManager script
           boardScript = GetComponent<BoardManager>();
+          spawnScript = GetComponent<SpawnManager>();
           anim = GetComponent<Animator>();
     }
 
@@ -64,6 +66,7 @@ public class GameManager : MonoBehaviour {
         Invoke("hideLevelImage", levelStartDelay);
         Debug.Log("Setting up level " + level);
         boardScript.setupScene(level);
+        spawnScript.setParams();
     }
 
     void hideLevelImage() {
@@ -83,7 +86,7 @@ public class GameManager : MonoBehaviour {
     public void gameOver() {
         Debug.Log("Game over");
         anim.SetTrigger("GameOver");
-    
+
         enabled = false;
     }
 

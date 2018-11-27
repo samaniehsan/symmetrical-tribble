@@ -10,19 +10,19 @@ public class SpawnManager : MonoBehaviour
     private GameObject[] spawnPoints;         // An array of the spawn points this enemy can spawn from.
     private int maxEnemies;
 
-
-    void Awake() {
-        currentEnemies = 0;
-        maxEnemies = (int)Mathf.Log(GameManager.instance.getLevel(), 2f);
-        Debug.Log("Max enemies: " + maxEnemies);
-    }
-
     void Start ()
     {
         spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
         Debug.Log(spawnPoints);
+        setParams();
         // Call the Spawn function after a delay of the spawnTime and then continue to call after the same amount of time.
         InvokeRepeating ("Spawn", spawnTime, spawnTime);
+    }
+
+    public void setParams() {
+        currentEnemies = 0;
+        maxEnemies = (int)Mathf.Log(GameManager.instance.getLevel(), 2f);
+        Debug.Log("Max enemies: " + maxEnemies);
     }
 
 
