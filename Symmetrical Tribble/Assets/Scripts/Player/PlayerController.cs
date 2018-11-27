@@ -3,16 +3,11 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
-    public float restartLevelDelay = 1f;
-
 	// Create private references to the rigidbody component on the player, and the count of pick up objects picked up so far
-	  private int count;
     private PlayerHealth health;
 
 
     void Awake() {
-        count = 0;
-
         health = GetComponent<PlayerHealth>();
         // Run the SetCountText function to update the UI (see below)
     }
@@ -49,7 +44,7 @@ public class PlayerController : MonoBehaviour {
 
         // Run the 'SetCountText()' function (see below)
         // SetCountText();
-        checkGameOverCondition();
+        GameManager.instance.checkWinCondition();
 
     }
 
@@ -70,24 +65,4 @@ public class PlayerController : MonoBehaviour {
         }
 
     }
-
-	public void Restart () {
-			SceneManager.LoadScene(0);
-	}
-
-	void checkGameOverCondition() {
-			Debug.Log("Checking game over condition");/* - health level is " + healthLevel);*/
-			if (health.currentHealth <= 0) {
-					Debug.Log("Calling GameManager.gameOver()");
-					GameManager.instance.gameOver();
-			} else {
-					Debug.Log("Checking for win condition");
-					if (count >= GameManager.instance.getNumPickups()) {
-							Invoke("Restart", restartLevelDelay);
-							enabled = false;
-					}
-			}
-
-	}
-
 }

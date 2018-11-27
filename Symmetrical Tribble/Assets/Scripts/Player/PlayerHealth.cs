@@ -80,6 +80,7 @@ public class PlayerHealth : MonoBehaviour {
         // playerAudio.Play();
 
         playerMovement.enabled = false;
+        GameManager.instance.gameOver();
         // anim.enabled = false;
         // playerShooting.enabled = false;
     }

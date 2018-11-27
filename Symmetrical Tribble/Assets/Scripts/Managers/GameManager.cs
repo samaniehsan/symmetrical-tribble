@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
     public float levelStartDelay = 2f;
 
-    private int level = 0;
+    private int level = 1;
     private Text levelText;
     private GameObject levelImage; // To hide the level while it's being built
     private BoardManager boardScript;
@@ -40,16 +40,18 @@ public class GameManager : MonoBehaviour {
     }
 
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
-        level++;
         initGame();
+        level++;
     }
 
     void OnEnable() {
         SceneManager.sceneLoaded += OnLevelFinishedLoading;
+        Debug.Log("Enabling scene");
     }
 
     void OnDisable() {
         SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+        Debug.Log("Disabling scene");
     }
 
     void initGame() {
@@ -84,12 +86,20 @@ public class GameManager : MonoBehaviour {
         enabled = false;
     }
 
-    public int getNumPickups() {
-        return boardScript.getNumPickups();
+    void restartLevel() {
+        Debug.Log("Restarting scene");
+        SceneManager.LoadScene(0);
     }
 
     public GameObject getTarget() {
         return boardScript.getTarget();
+    }
+
+    public void checkWinCondition() {
+      if (ScoreManager.score >= boardScript.getNumPickups()) {
+          Debug.Log("You win - starting next level");
+          Invoke("restartLevel", levelStartDelay);
+      }
     }
 
     // Update is called once per frame
