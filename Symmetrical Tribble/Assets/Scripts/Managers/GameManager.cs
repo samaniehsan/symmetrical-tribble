@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour {
     private GameObject levelImage; // To hide the level while it's being built
     private BoardManager boardScript;
     private GameObject bomb;
-    private bool doingSetup = true;
 
     void Awake() {
       //Check if instance already exists
@@ -54,8 +53,6 @@ public class GameManager : MonoBehaviour {
     }
 
     void initGame() {
-        doingSetup = true;
-
         levelImage = GameObject.Find("LevelImage");
         levelText = GameObject.Find("LevelText").GetComponent<Text>();
         levelText.text = "Stage " + level;
@@ -69,9 +66,6 @@ public class GameManager : MonoBehaviour {
 
     void hideLevelImage() {
         levelImage.SetActive(false);
-
-
-        doingSetup = false;
     }
 
     public void triggerBomb() {
