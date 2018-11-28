@@ -138,14 +138,14 @@ ModelImporter:
       name: Throw
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 131
+      lastFrame: 130
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 1
       loopBlendPositionY: 1
@@ -157,7 +157,15 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000000000000000000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.39091787
+        functionName: spawnMissiles
+        data: 
+        objectReferenceParameter: {fileID: 132654, guid: 3db888a07c8c1ae42b3ff9ff707231d0,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
