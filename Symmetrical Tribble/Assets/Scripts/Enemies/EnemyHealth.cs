@@ -52,7 +52,7 @@ public class EnemyHealth : MonoBehaviour {
     void Death () {
         isDead = true;
         Destroy (gameObject, 2f);
-        SpawnManager.currentEnemies--;
+        // SpawnManager.currentEnemies--;
 
         // capsuleCollider.isTrigger = true;
 
