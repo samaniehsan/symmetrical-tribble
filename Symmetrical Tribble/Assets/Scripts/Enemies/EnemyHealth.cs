@@ -8,7 +8,7 @@ public class EnemyHealth : MonoBehaviour {
     // public AudioClip deathClip;
 
 
-    // Animator anim;
+    Animator anim;
     // AudioSource enemyAudio;
     // ParticleSystem hitParticles;
     CapsuleCollider capsuleCollider;
@@ -17,7 +17,7 @@ public class EnemyHealth : MonoBehaviour {
 
 
     void Awake () {
-        // anim = GetComponent <Animator> ();
+        anim = GetComponent <Animator> ();
         // enemyAudio = GetComponent <AudioSource> ();
         // hitParticles = GetComponentInChildren <ParticleSystem> ();
         capsuleCollider = GetComponent <CapsuleCollider> ();
@@ -51,12 +51,10 @@ public class EnemyHealth : MonoBehaviour {
 
     void Death () {
         isDead = true;
-        Destroy (gameObject, 2f);
+        Destroy (gameObject, 5f);
         // SpawnManager.currentEnemies--;
 
-        // capsuleCollider.isTrigger = true;
-
-        // anim.SetTrigger ("Dead");
+        anim.SetTrigger ("die");
 
         // enemyAudio.clip = deathClip;
         // enemyAudio.Play ();
