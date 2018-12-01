@@ -6,20 +6,16 @@ public class PlayerAttacking : MonoBehaviour {
     HomingMissile missileScript;
     float radius;
     Vector3 center;
-    bool lpunch;
-    bool rpunch;
 
     void Awake() {
         anim = GetComponent<Animator>();
-        lpunch = true;
-        rpunch = false;
     }
 
     void Update() {
-        if(Input.GetMouseButtonDown(1)) {
-            anim.SetTrigger("punching");
-            lpunch = !lpunch;
-            rpunch = !rpunch;
+        if(Input.GetMouseButtonDown(0)) {
+            anim.SetTrigger("lpunch");
+        } else if(Input.GetMouseButtonDown(1)) {
+            anim.SetTrigger("rpunch");
         } else if(Input.GetKey(KeyCode.F)) {
             anim.SetTrigger("throwing");
         }

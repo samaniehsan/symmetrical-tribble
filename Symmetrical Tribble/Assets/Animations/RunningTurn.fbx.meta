@@ -137,12 +137,12 @@ ModelImporter:
     - serializedVersion: 16
       name: RunningRightTurn
       takeName: mixamo.com
-      firstFrame: 0
-      lastFrame: 23
+      firstFrame: 1
+      lastFrame: 22.4
       wrapMode: 0
-      orientationOffsetY: 0.52
+      orientationOffsetY: 0
       level: 0
-      cycleOffset: 0
+      cycleOffset: 0.42
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
@@ -166,11 +166,11 @@ ModelImporter:
       name: RunningLeftTurn
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 23
+      lastFrame: 21.6
       wrapMode: 0
-      orientationOffsetY: 0.52
+      orientationOffsetY: 0
       level: 0
-      cycleOffset: 0
+      cycleOffset: 0.9
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1

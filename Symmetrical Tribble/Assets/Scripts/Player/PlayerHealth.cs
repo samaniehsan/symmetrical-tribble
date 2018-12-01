@@ -16,7 +16,6 @@ public class PlayerHealth : MonoBehaviour {
 
     Animator anim;
     AudioSource playerAudio;
-    PlayerMovement playerMovement;
     // Rigidbody rb;
     Collider c;
     // PlayerShooting playerShooting;
@@ -44,7 +43,6 @@ public class PlayerHealth : MonoBehaviour {
     void Awake() {
         anim = GetComponent <Animator> ();
         playerAudio = GetComponent <AudioSource> ();
-        playerMovement = GetComponent <PlayerMovement> ();
         // rb = GetComponent<Rigidbody>();
         c = GetComponent<CapsuleCollider>();
         // playerShooting = GetComponentInChildren <PlayerShooting> ();
@@ -86,7 +84,6 @@ public class PlayerHealth : MonoBehaviour {
         // playerAudio.clip = deathClip;
         // playerAudio.Play();
 
-        playerMovement.enabled = false;
         GameManager.instance.gameOver();
         // anim.enabled = false;
         // playerShooting.enabled = false;
