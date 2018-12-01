@@ -13,13 +13,11 @@ public class EnemyHealth : MonoBehaviour {
     // ParticleSystem hitParticles;
     CapsuleCollider capsuleCollider;
     bool isDead;
-    bool isSinking;
 
 
     void Awake () {
         anim = GetComponent <Animator> ();
         // enemyAudio = GetComponent <AudioSource> ();
-        // hitParticles = GetComponentInChildren <ParticleSystem> ();
         capsuleCollider = GetComponent <CapsuleCollider> ();
 
         currentHealth = startingHealth;
@@ -27,9 +25,6 @@ public class EnemyHealth : MonoBehaviour {
 
 
     void Update () {
-        if(isSinking) {
-            transform.Translate (-Vector3.up * sinkSpeed * Time.deltaTime);
-        }
     }
 
 
@@ -41,9 +36,6 @@ public class EnemyHealth : MonoBehaviour {
 
         currentHealth -= amount;
 
-        // hitParticles.transform.position = hitPoint;
-        // hitParticles.Play();
-
         if(currentHealth <= 0)
             Death ();
     }
@@ -52,20 +44,10 @@ public class EnemyHealth : MonoBehaviour {
     void Death () {
         isDead = true;
         Destroy (gameObject, 5f);
-        // SpawnManager.currentEnemies--;
 
-        anim.SetTrigger ("die");
+        // anim.SetTrigger ("die");
 
         // enemyAudio.clip = deathClip;
         // enemyAudio.Play ();
     }
-
-
-    // public void StartSinking () {
-    //     // GetComponent <UnityEngine.AI.NavMeshAgent> ().enabled = false;
-    //     // GetComponent <Rigidbody> ().isKinematic = true;
-    //     isSinking = true;
-    //     // ScoreManager.score += scoreValue;
-    //     Destroy (gameObject, 2f);
-    // }
 }

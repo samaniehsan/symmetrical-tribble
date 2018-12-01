@@ -24,7 +24,6 @@ public class PlayerController : MonoBehaviour {
             HandleBombTriggerCollision(other);
             break;
         default:
-            HandleEnemyCollision(other);
             break;
     }
 	}
@@ -42,17 +41,15 @@ public class PlayerController : MonoBehaviour {
         // Add one to the score variable 'count'
         ScoreManager.score += 1;
 
-        // Run the 'SetCountText()' function (see below)
-        // SetCountText();
         GameManager.instance.checkWinCondition();
 
     }
 
-    void HandleEnemyCollision(Collider enemy)
+    void OnCollisionEnter(Collision c)
     {
-        if (enemy.gameObject.CompareTag("Enemy"))
+        if (c.gameObject.CompareTag("Enemy"))
         {
-            EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
+            EnemyHealth enemyHealth = c.gameObject.GetComponent<EnemyHealth>();
             if(enemyHealth != null) {
                 enemyHealth.TakeDamage(40);
             }
@@ -60,8 +57,8 @@ public class PlayerController : MonoBehaviour {
         }
         else
         {
-            if (enemy.gameObject.CompareTag("Bomb"))
-                health.currentHealth = 0;
+            if (c.gameObject.CompareTag("Bomb"))
+                health.TakeDamage(health.currentHealth);
         }
 
     }
