@@ -1,19 +1,27 @@
 using UnityEngine;
 using System.Linq;
 
-public class PlayerThrowing : MonoBehaviour {
+public class PlayerAttacking : MonoBehaviour {
     Animator anim;
     HomingMissile missileScript;
     float radius;
     Vector3 center;
+    bool lpunch;
+    bool rpunch;
 
     void Awake() {
         anim = GetComponent<Animator>();
+        lpunch = true;
+        rpunch = false;
     }
 
     void Update() {
-        if(Input.GetMouseButton(1)) {
-            anim.SetTrigger("attacking");
+        if(Input.GetMouseButtonDown(1)) {
+            anim.SetTrigger("punching");
+            lpunch = !lpunch;
+            rpunch = !rpunch;
+        } else if(Input.GetKey(KeyCode.F)) {
+            anim.SetTrigger("throwing");
         }
     }
 
