@@ -11,7 +11,7 @@ public class HomingMissile : MonoBehaviour {
 
     void Start() {
         rb = GetComponent<Rigidbody>();
-        firing = false;
+        // firing = false;
     }
 
     void FixedUpdate() {
