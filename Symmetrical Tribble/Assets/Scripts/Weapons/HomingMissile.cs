@@ -11,6 +11,7 @@ public class HomingMissile : MonoBehaviour {
 
     void Start() {
         rb = GetComponent<Rigidbody>();
+        firing = false;
     }
 
     void FixedUpdate() {
@@ -29,11 +30,11 @@ public class HomingMissile : MonoBehaviour {
         }
     }
 
-    void OnCollisionEnter(Collision collision) {
-        if (collision.collider.transform == target) {
-            Debug.Log("Attacking enemy " + collision.gameObject.name + " for 10 damage");
-            collision.gameObject.SendMessageUpwards("TakeDamage", 10, SendMessageOptions.DontRequireReceiver);
-            Destroy(gameObject);
-        }
-    }
+    // void OnCollisionEnter(Collision collision) {
+    //     if (collision.collider.transform == target) {
+    //         Debug.Log("Attacking enemy " + collision.gameObject.name + " for 10 damage");
+    //         collision.gameObject.SendMessageUpwards("TakeDamage", 10, SendMessageOptions.DontRequireReceiver);
+    //         Destroy(gameObject);
+    //     }
+    // }
 }

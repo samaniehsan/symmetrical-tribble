@@ -16,9 +16,9 @@ public class PlayerHealth : MonoBehaviour {
 
     Animator anim;
     AudioSource playerAudio;
-    // Rigidbody rb;
+    Rigidbody rb;
     Collider c;
-    // PlayerShooting playerShooting;
+    PlayerAttacking playerAttacking;
     bool isDead;
     bool damaged;
 
@@ -43,9 +43,9 @@ public class PlayerHealth : MonoBehaviour {
     void Awake() {
         anim = GetComponent <Animator> ();
         playerAudio = GetComponent <AudioSource> ();
-        // rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         c = GetComponent<CapsuleCollider>();
-        // playerShooting = GetComponentInChildren <PlayerShooting> ();
+        playerAttacking = GetComponentInChildren <PlayerAttacking> ();
         currentHealth = startingHealth;
         setHealthText();
     }
@@ -79,13 +79,14 @@ public class PlayerHealth : MonoBehaviour {
         isDead = true;
         anim.SetTrigger("die");
         c.isTrigger = true;
-        // rb.isKinematic = true;
-        // rb.detectCollisions = false;
+        rb.isKinematic = true;
+        rb.detectCollisions = false;
+
         // playerAudio.clip = deathClip;
         // playerAudio.Play();
 
         GameManager.instance.gameOver();
         // anim.enabled = false;
-        // playerShooting.enabled = false;
+        playerAttacking.enabled = false;
     }
 }

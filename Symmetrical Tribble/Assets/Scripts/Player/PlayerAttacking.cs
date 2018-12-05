@@ -5,20 +5,35 @@ public class PlayerAttacking : MonoBehaviour {
     Animator anim;
     HomingMissile missileScript;
     float radius;
+    bool punching;
     Vector3 center;
+    Animation leftPunch;
+    Animation rightPunch;
+    string leftPunchTrigger = "lpunch";
+    string rightPunchTrigger = "rpunch";
 
     void Awake() {
         anim = GetComponent<Animator>();
+        punching = false;
     }
 
     void Update() {
         if(Input.GetMouseButtonDown(0)) {
-            anim.SetTrigger("lpunch");
+            anim.SetTrigger(leftPunchTrigger);
         } else if(Input.GetMouseButtonDown(1)) {
-            anim.SetTrigger("rpunch");
+            anim.SetTrigger(rightPunchTrigger);
         } else if(Input.GetKey(KeyCode.F)) {
             anim.SetTrigger("throwing");
         }
+
+    }
+
+    private void hookConnect() {
+        punching = true;
+    }
+
+    private void clearHook() {
+        punching = false;
     }
 
     private void OnDrawGizmos() {
@@ -33,8 +48,14 @@ public class PlayerAttacking : MonoBehaviour {
         missileScript.target = findTarget(transform.TransformDirection(Vector3.forward));
     }
 
+    void OnCollisionEnter(Collision other) {
+        if (other.gameObject.CompareTag("Enemy") && punching) {
+            other.gameObject.SendMessageUpwards("TakeDamage", 10, SendMessageOptions.DontRequireReceiver);
+        }
+    }
+
     Transform findTarget(Vector3 direction) {
-        Transform target = null;
+        // Transform target = null;
         LayerMask enemiesMask = LayerMask.GetMask("enemies");
         radius = missileScript.range;
         center = transform.position + (direction * radius);

@@ -24,7 +24,7 @@ public class EnemyAttack : MonoBehaviour
     }
 
 
-    void OnTriggerEnter (Collider other)
+    void OnCollisionEnter (Collision other)
     {
         if(other.gameObject == player)
         {
@@ -33,7 +33,7 @@ public class EnemyAttack : MonoBehaviour
     }
 
 
-    void OnTriggerExit (Collider other)
+    void OnCollisionExit (Collision other)
     {
         if(other.gameObject == player)
         {
@@ -51,7 +51,7 @@ public class EnemyAttack : MonoBehaviour
             Attack ();
         }
 
-        if(playerHealth.currentHealth <= 0)
+        if(playerHealth.currentHealth <= 0 && anim != null)
         {
             anim.SetTrigger ("playerDead");
         }
