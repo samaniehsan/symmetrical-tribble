@@ -11,8 +11,13 @@ public class BoardSeekRaycastBehavior : MonoBehaviour
 
     private const bool DEBUGMODE = true;
     private const int FRAMERATE = 1; //3;
+    private Rigidbody rb;
 
     private int _currentFrameRate;
+
+    void Awake() {
+        rb = GetComponent<Rigidbody>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +30,7 @@ public class BoardSeekRaycastBehavior : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if(++_currentFrameRate % FRAMERATE != 0)
         {
@@ -147,9 +152,14 @@ public class BoardSeekRaycastBehavior : MonoBehaviour
 
         }
         // position
-        Vector3 nextStep = Vector3.MoveTowards(this.transform.position,
-                                               targetPos,
-                                               step);
-        this.transform.position = nextStep;
+        if (rb == null) {
+            Vector3 nextStep = Vector3.MoveTowards(transform.position,
+                                                   targetPos,
+                                                   step);
+            transform.position = nextStep;
+        } else {
+            Vector3 direction = (targetPos - transform.position).normalized;
+            rb.MovePosition(transform.position + direction * (speed / 5) * Time.deltaTime);
+        }
     }
 }
