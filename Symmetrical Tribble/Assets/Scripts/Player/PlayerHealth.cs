@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-
+using System;
 
 public class PlayerHealth : MonoBehaviour {
 
@@ -34,10 +34,15 @@ public class PlayerHealth : MonoBehaviour {
     }
 
     HealthLevel[] healthLevel =  new HealthLevel[] {
-        new HealthLevel("Super strong", Color.green), new HealthLevel("Strong", Color.green),
-        new HealthLevel("Ok", Color.blue), new HealthLevel("Injured", Color.cyan),
-        new HealthLevel("Weak", Color.yellow), new HealthLevel("Running on fumes", Color.yellow),
-        new HealthLevel("Like a zombie", Color.red), new HealthLevel("Dying", Color.red)
+        new HealthLevel("Dying", Color.red),
+        new HealthLevel("Like a zombie", new Color((float)0.85 *Color.red.r, Color.red.g,Color.red.b)),
+        new HealthLevel("Running on fumes", Color.yellow),
+        new HealthLevel("Weak", Color.yellow),
+        new HealthLevel("Injured", Color.cyan),
+        new HealthLevel("Ok", Color.blue),
+        new HealthLevel("Strong", new Color(Color.green.r,(float)0.9 * Color.green.g,Color.green.b)),
+        new HealthLevel("Super strong", Color.green),
+        
     };
 
     void Awake() {
@@ -62,17 +67,27 @@ public class PlayerHealth : MonoBehaviour {
     public void TakeDamage(int amount) {
         damaged = true;
         currentHealth -= amount;
-        setHealthText();
-        // playerAudio.Play();
         if(currentHealth <= 0 && !isDead) {
             Death();
         }
+        if(!setHealthText() && !isDead) {
+            Death();
+        }
+        // playerAudio.Play();
     }
 
-    void setHealthText() {
-        int statusIndex = Mathf.Clamp((startingHealth - currentHealth) / healthLevel.Length, 0, healthLevel.Length-1);
+    bool setHealthText() {
+        //note. there are 8 health levels. so 100/8. means they change at 12.5 step sizes.
+        //so if you take damage of 10 and you started with 100 you are still super strong.
+        double healthStatusStepSize = (double)startingHealth / healthLevel.Length;
+        int lostHealthStrength = startingHealth - currentHealth;
+        int healthStepsLost = Convert.ToInt32(((double)lostHealthStrength / healthStatusStepSize));
+
+        int newHeathLevel = (healthLevel.Length - healthStepsLost)-1;
+        int statusIndex = Mathf.Clamp(newHeathLevel, 0, healthLevel.Length-1);
         healthStatusText.text = healthLevel[statusIndex].text;
         healthStatusText.color = healthLevel[statusIndex].color;
+        return newHeathLevel > 0;
     }
 
     void Death() {
