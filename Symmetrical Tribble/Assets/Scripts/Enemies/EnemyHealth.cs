@@ -43,7 +43,7 @@ public class EnemyHealth : MonoBehaviour {
 
     void Death () {
         isDead = true;
-        Destroy (gameObject, 5f);
+        Destroy (gameObject, 2f);
 
         // anim.SetTrigger ("die");
 
